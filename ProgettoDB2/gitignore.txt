@@ -1,0 +1,9 @@
+
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/WorldCupMetrics.iml
+.idea/workspace.xml
+main/.env
+main/__pycache__/app.cpython-312.pyc
