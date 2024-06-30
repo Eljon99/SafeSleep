@@ -52,4 +52,4 @@ else:
     print("Divisione della collezione completata con successo.")
 
 # Chiudere la connessione
-client.close()
+#client.close()
