@@ -1,3 +1,4 @@
+import pymongo
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
@@ -8,9 +9,22 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["SafeSleep"]
 collection = db["sleep_data"]
 
-@app.route('/')
-def home():
-    return "Welcome to the Sleep Data API!"
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Esegui una query per ottenere tutti i documenti, escludendo il campo _id e ordinando per Person ID
+#Lo facciamo per test per vedere se funzionano
+#records = list(collection.find({}, {'_id': 0}).sort('Person ID', pymongo.ASCENDING))
+#print(records);
+
+"""
+@app.route('/records', methods=['GET'])
+def get_records():
+    try:
+        # Esegui una query per ottenere tutti i documenti, escludendo il campo _id e ordinando per Person ID
+        records = list(collection.find({}, {'_id': 0}).sort('Person ID', pymongo.ASCENDING))
+
+        # Restituisci i record come risposta JSON
+        return jsonify(records), 200
+    except Exception as e:
+        # Gestisci eventuali errori e restituisci una risposta di errore
+        return jsonify({'error': str(e)}), 500
+"""
