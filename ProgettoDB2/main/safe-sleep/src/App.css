@@ -1,23 +1,16 @@
 /* Stili globali */
-html, body {
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
   font-family: Arial, sans-serif;
+  background: url('../public/sfondo.jpg') repeat;
+  background-size: cover;
 }
 
 /* Stili globali per l'app container */
 #root {
-  height: 100%;
-}
-
-/* Eventuali stili globali aggiuntivi */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin-top: 10px; /* Aggiungi margine sopra il contenitore principale */
 }

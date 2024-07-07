@@ -7,44 +7,36 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  text-align: center;
-`;
-
-const ImageWrapper = styled.div`
-  background-image: url('/fotoSonno4.jpg');
-  background-repeat: repeat;
-  background-size: auto;
-  background-position: top left;
-  min-height: 100vh;
-  color: white;
 `;
 
 const Content = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  flex-direction: row;
-  padding: 50px 0;
+  align-items: center;
 `;
 
 const Footer = styled.footer`
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  border-top: 1px solid #ddd;
-  margin-top: 50px;
+  background-color: darkslategrey;
+  color: white;
+  padding: 10px 0;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 `;
 
-const FooterLink = styled.a`
+const SocialIcon = styled.a`
   margin: 0 10px;
+  color: white;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
+
 
 // Definizione del componente MainLayout
 const MainLayout = ({ children }) => {
   return (
-    <ImageWrapper>
       <Container>
         <Header />
         <Content>
@@ -53,12 +45,11 @@ const MainLayout = ({ children }) => {
           </div>
         </Content>
         <Footer>
-          <FooterLink href="https://instagram.com">Instagram</FooterLink>
-          <FooterLink href="https://youtube.com">YouTube</FooterLink>
-          <FooterLink href="https://linkedin.com">LinkedIn</FooterLink>
+          <SocialIcon href="https://instagram.com">Instagram</SocialIcon>
+          <SocialIcon href="https://youtube.com">YouTube</SocialIcon>
+          <SocialIcon href="https://linkedin.com">LinkedIn</SocialIcon>
         </Footer>
       </Container>
-    </ImageWrapper>
   );
 };
 

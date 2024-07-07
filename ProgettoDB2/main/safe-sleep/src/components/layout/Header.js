@@ -3,40 +3,43 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
+  background-color: darkslategrey;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-  width: 100%;
-  background-color: lightblue;
-  z-index: 1000;
+  border-radius: 10px;
+  max-width: 960px;
+  margin: 0 auto;
 `;
 
-const Logo = styled.div`
-  font-size: 24px;
+const Navbar = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+
+const NavbarLink = styled(Link)`
+  text-decoration: none;
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+  color: wheat;
   font-weight: bold;
-`;
-
-const NavBar = styled.nav`
-  a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
+  padding: 10px 15px;
+  margin: 0 5px; /* Aggiungi spazio tra i pulsanti */
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
 const Header = () => {
   return (
     <HeaderContainer>
-      <Logo>Logo</Logo>
-      <NavBar>
-        <Link to="/">Home</Link>
-        <Link to="/crud">Crud</Link>
-        <Link to="/metrics">Metrics</Link>
-        <Link to="/info">Info</Link>
-      </NavBar>
+      <Navbar>
+        <NavbarLink to="/">Home</NavbarLink>
+        <NavbarLink to="/crud">Crud</NavbarLink>
+        <NavbarLink to="/metrics">Metrics</NavbarLink>
+        <NavbarLink to="/info">Info</NavbarLink>
+      </Navbar>
     </HeaderContainer>
   );
 };
