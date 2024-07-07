@@ -1,104 +1,107 @@
-html, body {
+
+
+
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
+  font-family: Arial, sans-serif;
+  background: url('../public/sfondo.jpg') repeat;
+  background-size: cover;
 }
 
 #root {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin-top: 10px; /* Aggiungi margine sopra il contenitore principale */
 }
 
 .container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  text-align: center;
 }
 
-.image {
-  background-image: url('../public/fotoSonno4.jpg'); /* Percorso relativo all'immagine */
-  background-repeat: repeat; /* Fa in modo che l'immagine si ripeta */
-  background-size: auto; /* Mantiene la dimensione originale dell'immagine */
-  background-position: top left; /* Posiziona l'immagine a partire dall'angolo in alto a sinistra */
-  min-height: 100vh; /* Assicura che il contenitore copra tutta l'altezza della finestra */
-  color: white; /* Cambia il colore del testo per migliorare la leggibilità */
-}
-/*
 .header {
+  background-color: darkslategrey;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #ddd;
-  background-color: lightblue;
-}*/
+  border-radius: 10px;
+  max-width: 960px;
+  margin: 0 auto;
 
-/* Stile per l'header, attaccato in cima, con layout flessibile per i contenuti */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-  width: 100%; /* Assicura che l'header occupi tutta la larghezza */
-  /* position: fixed; /* Fissa l'header in cima alla pagina */
-  top: 0; /* Posiziona l'header a 0 dall'alto */
-  background-color: lightblue; /* Sfondo semi-trasparente per vedere lo sfondo */
-  z-index: 1000; /* Assicura che l'header stia sopra altri elementi */
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
+.navbar {
+  display: flex;
+  justify-content: space-around;
 }
 
 .navbar a {
-  margin-left: 20px;
   text-decoration: none;
-  color: black;
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+  color: wheat;
   font-weight: bold;
+  padding: 10px 15px;
+  margin: 0 5px; /* Aggiungi spazio tra i pulsanti */
+}
+
+.navbar a:hover {
+  text-decoration: underline;
 }
 
 .content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: row;
-  padding: 50px 0;
-}
-
-.title {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-
-.image-placeholder {
-  width: 300px;
-  height: 300px;
-  background-color: #e0e0e0;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 20px;
 }
 
-.body-text {
+.form-container {
+  background-color: rgba(245, 245, 245, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.title {
+  color: darkslategrey;
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+  font-size: 52px;
+  margin-bottom: 30px;
+}
+
+.description {
+  font-size: 16px;
+  color: #666;
   max-width: 600px;
-  text-align: left;
+}
+
+.description-image {
+  max-width: 200px; /* Larghezza massima dell'immagine */
+  height: auto; /* Altezza automatica in base alla larghezza */
+  border-radius: 5px; /* Bordi arrotondati all'immagine */
 }
 
 .footer {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  border-top: 1px solid #ddd;
-  margin-top: 50px;
+  background-color: darkslategrey;
+  color: white;
+  padding: 10px 0;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.footer a {
+.footer .social-icon {
   margin: 0 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.footer .social-icon:hover {
+  text-decoration: underline;
 }
 
