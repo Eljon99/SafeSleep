@@ -1,95 +1,23 @@
+/* Stili globali */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
+  font-family: Arial, sans-serif;
 }
 
+/* Stili globali per l'app container */
 #root {
   height: 100%;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  text-align: center;
-}
-
-.image {
-  background-image: url('../public/fotoSonno4.jpg'); /* Percorso relativo all'immagine */
-  background-repeat: repeat; /* Fa in modo che l'immagine si ripeta */
-  background-size: auto; /* Mantiene la dimensione originale dell'immagine */
-  background-position: top left; /* Posiziona l'immagine a partire dall'angolo in alto a sinistra */
-  min-height: 100vh; /* Assicura che il contenitore copra tutta l'altezza della finestra */
-  color: white; /* Cambia il colore del testo per migliorare la leggibilità */
-}
-
-/* Stile per l'header, attaccato in cima, con layout flessibile per i contenuti */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-  width: 100%; /* Assicura che l'header occupi tutta la larghezza */
-  /* position: fixed; /* Fissa l'header in cima alla pagina */
-  top: 0; /* Posiziona l'header a 0 dall'alto */
-  background-color: lightblue; /* Sfondo semi-trasparente per vedere lo sfondo */
-  z-index: 1000; /* Assicura che l'header stia sopra altri elementi */
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.navbar a {
-  margin-left: 20px;
+/* Eventuali stili globali aggiuntivi */
+a {
+  color: inherit;
   text-decoration: none;
-  color: black;
-  font-weight: bold;
 }
 
-.content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: row;
-  padding: 50px 0;
+a:hover {
+  text-decoration: underline;
 }
-
-.title {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-
-.image-placeholder {
-  width: 300px;
-  height: 300px;
-  background-color: #e0e0e0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20px;
-}
-
-.body-text {
-  max-width: 600px;
-  text-align: left;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  border-top: 1px solid #ddd;
-  margin-top: 50px;
-}
-
-.footer a {
-  margin: 0 10px;
-}
-
