@@ -19,38 +19,12 @@ html, body {
 }
 
 .image {
-  background-image: url('../public/fotoSonno4.jpg'); /* Percorso relativo all'immagine */
+  background-image: url('../../assets/fotoSonno4.jpg'); /* Percorso relativo all'immagine */
   background-repeat: repeat; /* Fa in modo che l'immagine si ripeta */
   background-size: auto; /* Mantiene la dimensione originale dell'immagine */
   background-position: top left; /* Posiziona l'immagine a partire dall'angolo in alto a sinistra */
   min-height: 100vh; /* Assicura che il contenitore copra tutta l'altezza della finestra */
   color: white; /* Cambia il colore del testo per migliorare la leggibilità */
-}
-
-/* Stile per l'header, attaccato in cima, con layout flessibile per i contenuti */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-  width: 100%; /* Assicura che l'header occupi tutta la larghezza */
-  /* position: fixed; /* Fissa l'header in cima alla pagina */
-  top: 0; /* Posiziona l'header a 0 dall'alto */
-  background-color: lightblue; /* Sfondo semi-trasparente per vedere lo sfondo */
-  z-index: 1000; /* Assicura che l'header stia sopra altri elementi */
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.navbar a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
 }
 
 .content {
@@ -92,4 +66,3 @@ html, body {
 .footer a {
   margin: 0 10px;
 }
-

@@ -1,4 +1,23 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './components/pages/Home';
+/*import './App.css';*/
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Puoi aggiungere altre rotte qui */}
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+/*
+import React from 'react';
 import './App.css';
 
 function App() {
@@ -16,7 +35,8 @@ function App() {
       </header>
       <div className="content">
         <div className="image-placeholder">
-          {/* Puoi sostituire questo div con un tag <img> */}
+          {/* Puoi sostituire questo div con un tag <img> *//*}
+          /*
           <p>Image Placeholder</p>
         </div>
         <div>
@@ -39,6 +59,6 @@ function App() {
 }
 
 export default App;
-
+*/
 
 
