@@ -2,6 +2,7 @@ import pymongo
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
@@ -41,3 +42,39 @@ def get_diario():
     except Exception as e:
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/persona', methods=['POST'])
+def add_persona():
+    try:
+        # Ottieni i dati della persona dal corpo della richiesta
+        dataPersona = request.json
+
+        required_fields = ['Gender', 'Age', 'Occupation', 'Physical Activity Level', 'BMI Category']
+        for field in required_fields:
+            if field not in dataPersona or not dataPersona[field]:
+                return jsonify({'error': f'Dato mancante: {field}'}), 400
+
+        # Inserisci i dati della persona nella collezione
+        result = collectionP.insert_one(dataPersona)
+        new_person = collectionP.find_one({'_id': result.inserted_id}, {'_id': 0})
+
+        # Restituisci il nuovo record come risposta
+        return jsonify(new_person), 201
+    except Exception as e:
+        # Gestisci eventuali errori e restituisci una risposta di errore
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/persona/<id>', methods=['DELETE'])
+def delete_persona(id):
+    try:
+        # Converti l'ID da stringa a ObjectId
+        result = collectionP.delete_one({'_id': ObjectId(id)})
+
+        # Controlla se una persona è stata eliminata
+        if result.deleted_count == 1:
+            return jsonify({'message': 'Persona eliminata con successo'}), 200
+        else:
+            return jsonify({'error': 'Persona non trovata'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 50

@@ -142,6 +142,11 @@ const PaginationButton = styled.button`
   }
 `;
 
+const SmallPaginationButton = styled(PaginationButton)`
+  padding: 8px;
+  font-size: 16px;
+`;
+
 const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -166,8 +171,8 @@ const CrudP = () => {
     Gender: '',
     Age: '',
     Occupation: '',
-    Physical_Activity_Level: '',
-    BMI_Category: '',
+    'Physical Activity Level' : '',
+    'BMI Category' : '',
   });
 
 // useEffect esegue effetti collaterali nel componente. In questo caso, esegue la funzione fetchSleepData quando il componente è montato.
@@ -201,26 +206,43 @@ const fetchSleepData = async () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await Axios.post('http://127.0.0.1:5000/api/persona', formData);
-      setSleepData([...sleepData, response.data]);
-      setFormData({
-        Gender: '',
-        Age: '',
-        Occupation: '',
-        'Physical Activity Level' : '',
-        'BMI Category' : '',
-      });
-    } catch (error) {
-      console.error('Error adding data:', error);
+
+    const { Gender, Age, Occupation, 'Physical Activity Level': activityLevel, 'BMI Category': bmiCategory } = formData;
+    if (!Gender || !Age || !Occupation || !activityLevel || !bmiCategory) {
+        alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
+        return;
     }
-  };
+
+    try {
+        // Invia i dati al server per aggiungere una nuova persona
+        const response = await Axios.post('http://127.0.0.1:5000/api/persona', formData);
+
+        // Verifica se la risposta contiene i nuovi dati e aggiornali
+        if (response.data) {
+            setSleepData(prevData => [...prevData, response.data]); // Aggiorna lo stato con il nuovo dato
+        }
+
+        // Resetta il form
+        setFormData({
+            Gender: '',
+            Age: '',
+            Occupation: '',
+            'Physical Activity Level' : '',
+            'BMI Category' : '',
+        });
+    } catch (error) {
+        console.error('Error adding data:', error);
+    }
+};
+
 
   const handleDelete = async (id) => {
     try {
-      await Axios.delete(`/api/persona/${id}`);
+      await Axios.delete(`http://127.0.0.1:5000/api/persona/${id}`);
+
       setSleepData(sleepData.filter((data) => data.id !== id));
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error deleting data:', error);
     }
   };
@@ -251,11 +273,11 @@ const fetchSleepData = async () => {
             </FormGroup>
             <FormGroup>
               <FormLabel>Livello Attività Fisica</FormLabel>
-              <FormInput type="number" name="Physical_Activity_Level" value={formData['Physical Activity Level']} onChange={handleChange} />
+              <FormInput type="number" name="Physical Activity Level" value={formData['Physical Activity Level']} onChange={handleChange} />
             </FormGroup>
             <FormGroup>
               <FormLabel>Categoria BMI</FormLabel>
-              <FormInput type="text" name="BMI_Category" value={formData['BMI_Category']} onChange={handleChange} />
+              <FormInput type="text" name="BMI Category" value={formData['BMI Category']} onChange={handleChange} />
             </FormGroup>
           </FormRow>
           <FormButton type="submit">Aggiungi</FormButton>
@@ -292,6 +314,9 @@ const fetchSleepData = async () => {
         </TableContainer>
       </MainContainer>
       <PaginationContainer>
+        <SmallPaginationButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+          &lt;&lt;
+        </SmallPaginationButton>
         <PaginationButton onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
           &lt;
         </PaginationButton>
@@ -299,6 +324,9 @@ const fetchSleepData = async () => {
         <PaginationButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
           &gt;
         </PaginationButton>
+        <SmallPaginationButton onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
+          &gt;&gt;
+        </SmallPaginationButton>
       </PaginationContainer>
     </MainLayout>
   );
