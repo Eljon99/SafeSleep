@@ -157,7 +157,7 @@ const PageNumber = styled.span`
 `;
 
 
-const Crud = () => {
+const CrudP = () => {
   const [sleepData, setSleepData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -304,4 +304,4 @@ const fetchSleepData = async () => {
   );
 }
 
-export default Crud;
+export default CrudP;
