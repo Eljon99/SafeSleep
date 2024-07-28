@@ -22,15 +22,6 @@ const TextContainer = styled.div`
   padding: 30px; // Aggiungi padding se necessario
 `;
 
-/*
-const FormContainer = styled.div`
-  background-color: rgba(245, 245, 245, 0.7);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`; */
-
 const FormContainer = styled.div`
   background-color: rgba(245, 245, 245, 0.7);
   padding: 20px;
@@ -66,6 +57,5 @@ const Home = () => {
     </MainLayout>
   );
 }
-
 
 export default Home;

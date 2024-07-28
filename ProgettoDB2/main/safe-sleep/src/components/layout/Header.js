@@ -36,7 +36,8 @@ const Header = () => {
     <HeaderContainer>
       <Navbar>
         <NavbarLink to="/">Home</NavbarLink>
-        <NavbarLink to="/crud">Crud</NavbarLink>
+        <NavbarLink to="/crudP">CrudP</NavbarLink>
+        <NavbarLink to="/crudD">CrudD</NavbarLink>
         <NavbarLink to="/metrics">Metrics</NavbarLink>
         <NavbarLink to="/info">Info</NavbarLink>
       </Navbar>
