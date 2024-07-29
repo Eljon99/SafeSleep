@@ -21,11 +21,11 @@ if person_collection.count_documents({}) > 0 or diary_collection.count_documents
 else:
     # Processare ogni documento nella collezione originale
     for document in original_collection.find():
-        person_id = document['_id']  # Assume che ogni documento abbia un campo _id unico
+         # Assume che ogni documento abbia un campo _id unico
 
         # Documento per la collezione persona
         person_document = {
-            '_id': person_id,
+            'Person ID': document['Person ID'],
             'Gender': document['Gender'],
             'Age': document['Age'],
             'Occupation': document['Occupation'],
@@ -35,7 +35,7 @@ else:
 
         # Documento per la collezione diario_persona
         diary_document = {
-            'Person ID': person_id,
+            'Person ID': document['Person ID'],
             'Sleep Duration': document['Sleep Duration'],
             'Quality of Sleep': document['Quality of Sleep'],
             'Stress Level': document['Stress Level'],

@@ -12,6 +12,16 @@ const MainContainer = styled.div`
   margin-top: 20px;
 `;
 
+const FormSelect = styled.select`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  font-size: 14px;
+  width: 100%; /* Assicurati che la larghezza corrisponda agli altri campi di input */
+  background-color: white;
+  box-sizing: border-box; /* Assicura che il padding non influisca sulla larghezza totale */
+`;
+
 
 const Title = styled.h1`
   color: darkslategrey;
@@ -236,16 +246,18 @@ const fetchSleepData = async () => {
 };
 
 
-  const handleDelete = async (id) => {
-    try {
-      await Axios.delete(`http://127.0.0.1:5000/api/persona/${id}`);
+const handleDelete = async (person_id) => {
+  try {
+    await Axios.delete(`http://127.0.0.1:5000/api/persona/${person_id}`);
+    setSleepData(sleepData.filter((data) => data['Person ID'] !== person_id));
+  } catch (error) {
+    console.error('Error deleting data:', error);
+  }
+};
 
-      setSleepData(sleepData.filter((data) => data.id !== id));
-    }
-    catch (error) {
-      console.error('Error deleting data:', error);
-    }
-  };
+// Assicurati di passare il Persona ID corretto quando chiami handleDelete
+
+
 
   const totalPages = Math.ceil(sleepData.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
@@ -261,7 +273,12 @@ const fetchSleepData = async () => {
           <FormRow>
             <FormGroup>
               <FormLabel>Genere</FormLabel>
-              <FormInput type="text" name="Gender" value={formData.Gender} onChange={handleChange} />
+              <FormSelect name="Gender" value={formData.Gender} onChange={handleChange}>
+                <option value="">Seleziona</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </FormSelect>
             </FormGroup>
             <FormGroup>
               <FormLabel>Età</FormLabel>
@@ -297,7 +314,7 @@ const fetchSleepData = async () => {
             </thead>
             <tbody>
               {currentItems.map((data) => (
-                <TableRow key={data.id}>
+                <TableRow key={data['Person ID']}>
                   <TableCell><img src={data.image} alt={data.name} /></TableCell>
                   <TableCell>{data.Gender}</TableCell>
                   <TableCell>{data.Age}</TableCell>
@@ -305,7 +322,7 @@ const fetchSleepData = async () => {
                   <TableCell>{data['Physical Activity Level']}</TableCell>
                   <TableCell>{data['BMI Category']}</TableCell>
                   <TableCell>
-                    <DeleteButton onClick={() => handleDelete(data.id)}>Elimina</DeleteButton>
+                    <DeleteButton onClick={() => handleDelete(data['Person ID'])}>Elimina</DeleteButton>
                   </TableCell>
                 </TableRow>
               ))}

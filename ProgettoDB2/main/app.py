@@ -2,7 +2,7 @@ import pymongo
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
-from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 CORS(app)
@@ -15,9 +15,9 @@ collectionP = db["persona"]
 collectionD = db["diario_persona"]
 
 # Esegui una query per ottenere tutti i documenti, escludendo il campo _id e ordinando per Person ID
-#Lo facciamo per test per vedere se funzionano
 records = list(collectionD.find({}, {'_id': 0}).sort('Person ID', pymongo.ASCENDING))
 print(records);
+
 
 @app.route('/api/persona', methods=['GET'])
 def get_persone():
@@ -43,7 +43,6 @@ def get_diario():
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/persona', methods=['POST'])
 def add_persona():
     try:
@@ -65,16 +64,19 @@ def add_persona():
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/persona/<id>', methods=['DELETE'])
-def delete_persona(id):
-    try:
-        # Converti l'ID da stringa a ObjectId
-        result = collectionP.delete_one({'_id': ObjectId(id)})
 
-        # Controlla se una persona è stata eliminata
+@app.route('/api/persona/<int:person_id>', methods=['DELETE'])
+def delete_persona(person_id):
+    try:
+        # Cerca e elimina la persona con il Person ID specificato
+        result = collectionP.delete_one({"Person ID": person_id})
+
         if result.deleted_count == 1:
+            # Se la persona è stata eliminata con successo
             return jsonify({'message': 'Persona eliminata con successo'}), 200
         else:
-            return jsonify({'error': 'Persona non trovata'}), 404
+            # Se non è stata trovata nessuna persona con il Person ID specificato
+            return jsonify({'message': 'Persona non trovata'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 50
+        # Gestisci eventuali errori e restituisci una risposta di errore
+        return jsonify({'error': str(e)}), 500
