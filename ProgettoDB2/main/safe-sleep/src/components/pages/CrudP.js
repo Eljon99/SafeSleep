@@ -3,14 +3,8 @@ import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
 
-const MainContainer = styled.div`
-  width: 100%;
-  padding: 20px;
-  background-color: rgba(245, 245, 245, 0.7);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
-  border-radius: 10px;
-  margin-top: 20px;
-`;
+import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
+  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber} from '../layout/Crud.js';
 
 const FormSelect = styled.select`
   padding: 8px;
@@ -20,69 +14,6 @@ const FormSelect = styled.select`
   width: 100%; /* Assicurati che la larghezza corrisponda agli altri campi di input */
   background-color: white;
   box-sizing: border-box; /* Assicura che il padding non influisca sulla larghezza totale */
-`;
-
-
-const Title = styled.h1`
-  color: darkslategrey;
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 42px;
-`;
-
-const Description = styled.p`
-  color: black;
-  text-align: center;
-  margin-bottom: 20px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-const FormGroup = styled.div`
-  flex: 1;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const FormRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
-`;
-
-
-const FormLabel = styled.label`
-  margin-bottom: 5px;
-  color: darkslategrey;
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const FormInput = styled.input`
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 24px;
-  font-size: 14px;
-`;
-
-const FormButton = styled.button`
-  background-color: darkslategrey;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 18px;
-  align-self: flex-start;
-  &:hover {
-    background-color: #555;
-  }
 `;
 
 const DeleteButton = styled.button`
@@ -97,80 +28,6 @@ const DeleteButton = styled.button`
     background-color: darkred;
   }
 `;
-
-
-
-const TableContainer = styled.div`
-  width: 100%;
-  overflow-x: auto;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 7px; 
-  overflow: hidden; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
-`;
-
-const TableHeader = styled.th`
-  background-color: darkslategrey;;
-  color: wheat;
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px ridge rgba(245, 245, 245, 0.7);
-  border-right: 1px ridge rgba(245, 245, 245, 0.3);  
-    
-`;
-
-const TableRow = styled.tr`
- background-color: white;
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  text-align: left;
-  font-size: 14px;  
-  border: 1px solid darkgrey;
-`;
-
-const PaginationButton = styled.button`
-  background-color: darkslategrey;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin: 0 5px;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 18px;
-  &:hover {
-    background-color: #555;
-  }
-  &:disabled {
-    background-color: #ccc;
-    cursor: default;
-  }
-`;
-
-const SmallPaginationButton = styled(PaginationButton)`
-  padding: 8px;
-  font-size: 16px;
-`;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-`;
-
-const PageNumber = styled.span`
-  font-size: 18px;
-  margin: 0 10px;
-  color: wheat;
-`;
-
 
 const CrudP = () => {
   const [sleepData, setSleepData] = useState([]);

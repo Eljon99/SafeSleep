@@ -3,38 +3,20 @@ import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
 
-import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table, TableHeader, TableRow, TableCell, DeleteButton} from '../layout/Crud.js';
+import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
+  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber} from '../layout/Crud.js';
 
-const PaginationButton = styled.button`
-  background-color: darkslategrey;
+const UpdateButton = styled.button`
+  background-color: green;
   color: white;
   border: none;
-  padding: 10px;
-  margin: 0 5px;
+  padding: 5px 10px;
   cursor: pointer;
-  border-radius: 8px;
-  font-size: 18px;
+  border-radius: 4px;
+  font-size: 14px;
   &:hover {
-    background-color: #555;
+    background-color: green;
   }
-  &:disabled {
-    background-color: #ccc;
-    cursor: default;
-  }
-`;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-`;
-
-const PageNumber = styled.span`
-  font-size: 18px;
-  margin: 0 10px;
-  color: wheat;
 `;
 
 const CrudD = () => {
@@ -100,14 +82,20 @@ const fetchSleepData = async () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleUpdate = async (id, updatedData) => {
     try {
-      await Axios.delete(`/api/diario/${id}`);
-      setSleepData(sleepData.filter((data) => data.id !== id));
+      // Effettua una richiesta PUT per aggiornare i dati
+      await Axios.put(`/api/diario/${id}`, updatedData);
+
+      // Aggiorna i dati locali
+      setSleepData(sleepData.map((data) =>
+        data.id === id ? { ...data, ...updatedData } : data
+      ));
     } catch (error) {
-      console.error('Error deleting data:', error);
+      console.error('Error updating data:', error);
     }
   };
+
 
   const totalPages = Math.ceil(sleepData.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
@@ -175,7 +163,7 @@ const fetchSleepData = async () => {
                   <TableCell>{data['Daily Steps']}</TableCell>
                   <TableCell>{data['Sleep Disorder']}</TableCell>
                   <TableCell>
-                    <DeleteButton onClick={() => handleDelete(data.id)}>Elimina</DeleteButton>
+                    <UpdateButton onClick={() => handleUpdate(data.id)}>Modifica</UpdateButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -184,6 +172,9 @@ const fetchSleepData = async () => {
         </TableContainer>
       </MainContainer>
       <PaginationContainer>
+        <SmallPaginationButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+          &lt;&lt;
+        </SmallPaginationButton>
         <PaginationButton onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
           &lt;
         </PaginationButton>
@@ -191,6 +182,9 @@ const fetchSleepData = async () => {
         <PaginationButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
           &gt;
         </PaginationButton>
+        <SmallPaginationButton onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
+          &gt;&gt;
+        </SmallPaginationButton>
       </PaginationContainer>
     </MainLayout>
   );

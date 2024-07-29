@@ -30,7 +30,7 @@ export const Form = styled.form`
 `;
 
 export const FormGroup = styled.div`
-  flex: 1;
+  flex: 0 0 auto;  /* Impedisce al FormGroup di espandersi */
   min-width: 200px;
   display: flex;
   flex-direction: column;
@@ -55,6 +55,7 @@ export const FormInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 24px;
   font-size: 14px;
+  width: 250px;  /* Imposta una larghezza fissa */  
 `;
 
 export const FormButton = styled.button`
@@ -115,4 +116,41 @@ export const TableCell = styled.td`
   text-align: left;
   font-size: 14px;  
   border: 1px solid darkgrey;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: darkslategrey;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 18px;
+  &:hover {
+    background-color: #555;
+  }
+  &:disabled {
+    background-color: #ccc;
+    cursor: default;
+  }
+`;
+
+export const SmallPaginationButton = styled(PaginationButton)`
+  padding: 8px;
+  font-size: 16px;
+`;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+export const PageNumber = styled.span`
+  font-size: 18px;
+  margin: 0 10px;
+  color: wheat;
 `;
