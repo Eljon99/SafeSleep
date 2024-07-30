@@ -43,6 +43,20 @@ def get_diario():
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
 
+
+
+counters_collection = db['counters']
+
+# Funzione per ottenere il prossimo ID
+def get_next_sequence_value(sequence_name):
+    sequence_document = counters_collection.find_one_and_update(
+        {"_id": sequence_name},
+        {"$inc": {"sequence_value": 1}},
+        return_document=pymongo.ReturnDocument.AFTER,
+        upsert=True
+    )
+    return sequence_document["sequence_value"]
+
 @app.route('/api/persona', methods=['POST'])
 def add_persona():
     try:
@@ -53,6 +67,12 @@ def add_persona():
         for field in required_fields:
             if field not in dataPersona or not dataPersona[field]:
                 return jsonify({'error': f'Dato mancante: {field}'}), 400
+
+        # Ottieni il prossimo Person ID autoincrementale
+        next_person_id = get_next_sequence_value("person_id")
+
+        # Aggiungi Person ID ai dati della persona
+        dataPersona['Person ID'] = next_person_id
 
         # Inserisci i dati della persona nella collezione
         result = collectionP.insert_one(dataPersona)
