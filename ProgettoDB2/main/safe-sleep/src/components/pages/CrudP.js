@@ -185,6 +185,7 @@ const handleDelete = async (person_id) => {
           <Table>
             <thead>
               <TableRow>
+                <TableHeader>Person ID</TableHeader>
                 <TableHeader>Genere</TableHeader>
                 <TableHeader>Età</TableHeader>
                 <TableHeader>Occupazione</TableHeader>
@@ -196,6 +197,7 @@ const handleDelete = async (person_id) => {
             <tbody>
               {currentItems.map((data) => (
                 <TableRow key={data['Person ID']}>
+                  <TableCell>{data['Person ID']}</TableCell>
                   <TableCell>{data.Gender}</TableCell>
                   <TableCell>{data.Age}</TableCell>
                   <TableCell>{data.Occupation}</TableCell>
