@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
-
 import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
   TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber} from '../layout/Crud.js';
+
 
 const FormSelect = styled.select`
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 24px;
   font-size: 14px;
-  width: 100%; /* Assicurati che la larghezza corrisponda agli altri campi di input */
+  width: 100%;
   background-color: white;
-  box-sizing: border-box; /* Assicura che il padding non influisca sulla larghezza totale */
+  box-sizing: border-box;
 `;
+
 
 const DeleteButton = styled.button`
   background-color: red;
@@ -32,7 +33,7 @@ const DeleteButton = styled.button`
 const CrudP = () => {
   const [sleepData, setSleepData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
 
   const [formData, setFormData] = useState({
     Gender: '',
@@ -123,8 +124,8 @@ const handleDelete = async (person_id) => {
   return (
     <MainLayout>
       <MainContainer>
-        <Title>Operazioni CRUD</Title>
-        <Description>In questa pagine è possibile visualizzare, eliminare e creare nuove informazioni riguardo nuovi utenti.</Description>
+        <Title>Operazioni CRUD-Persona</Title>
+        <Description>In questa pagine è possibile visualizzare, eliminare e creare nuove informazioni riguardo tutti i dati delle persone del database.</Description>
 
         <Form onSubmit={handleSubmit}>
           <FormRow>
@@ -137,21 +138,45 @@ const handleDelete = async (person_id) => {
                 <option value="Other">Other</option>
               </FormSelect>
             </FormGroup>
-            <FormGroup>
+           <FormGroup>
               <FormLabel>Età</FormLabel>
-              <FormInput type="number" name="Age" value={formData.Age} onChange={handleChange} />
+              <FormInput
+                type="number"
+                name="Age"
+                value={formData.Age}
+                onChange={handleChange}
+                placeholder="Inserisci un numero"
+              />
             </FormGroup>
             <FormGroup>
               <FormLabel>Occupazione</FormLabel>
-              <FormInput type="text" name="Occupation" value={formData.Occupation} onChange={handleChange} />
+              <FormInput
+                type="text"
+                name="Occupation"
+                value={formData.Occupation}
+                onChange={handleChange}
+                placeholder="Inserisci l'occupazione"
+              />
             </FormGroup>
             <FormGroup>
               <FormLabel>Livello Attività Fisica</FormLabel>
-              <FormInput type="number" name="Physical Activity Level" value={formData['Physical Activity Level']} onChange={handleChange} />
+              <FormInput
+                type="number"
+                name="Physical Activity Level"
+                value={formData['Physical Activity Level']}
+                onChange={handleChange}
+                placeholder="Inserisci un numero"
+              />
             </FormGroup>
             <FormGroup>
               <FormLabel>Categoria BMI</FormLabel>
-              <FormInput type="text" name="BMI Category" value={formData['BMI Category']} onChange={handleChange} />
+              <FormSelect name="BMI Category" value={formData['BMI Category']} onChange={handleChange}>
+                <option value="">Seleziona</option>
+                <option value="underweight">Underweight</option>
+                <option value="normal">Normal</option>
+                <option value="overweight">Overweight</option>
+                <option value="obese">Obese</option>
+              </FormSelect>
             </FormGroup>
           </FormRow>
           <FormButton type="submit">Aggiungi</FormButton>
@@ -160,7 +185,6 @@ const handleDelete = async (person_id) => {
           <Table>
             <thead>
               <TableRow>
-                <TableHeader>Foto</TableHeader>
                 <TableHeader>Genere</TableHeader>
                 <TableHeader>Età</TableHeader>
                 <TableHeader>Occupazione</TableHeader>
@@ -172,7 +196,6 @@ const handleDelete = async (person_id) => {
             <tbody>
               {currentItems.map((data) => (
                 <TableRow key={data['Person ID']}>
-                  <TableCell><img src={data.image} alt={data.name} /></TableCell>
                   <TableCell>{data.Gender}</TableCell>
                   <TableCell>{data.Age}</TableCell>
                   <TableCell>{data.Occupation}</TableCell>
