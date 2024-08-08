@@ -15,10 +15,10 @@ collectionP = db["persona"]
 collectionD = db["diario_persona"]
 
 # Esegui una query per ottenere tutti i documenti, escludendo il campo _id e ordinando per Person ID
-records = list(collectionD.find({}, {'_id': 0}).sort('Person ID', pymongo.ASCENDING))
-print(records);
+#records = list(collectionD.find({}, {'_id': 0}).sort('Person ID', pymongo.ASCENDING))
+#print(records);
 
-
+#LETTURA DELLE PERSONE
 @app.route('/api/persona', methods=['GET'])
 def get_persone():
     try:
@@ -31,6 +31,23 @@ def get_persone():
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
 
+#Trova una persona dato il suo id
+@app.route('/api/persona/<int:person_id>', methods=['GET'])
+def get_persona_by_id(person_id):
+    try:
+        app.logger.info(f"Richiesta GET per Person ID: {person_id}")  # Log per debug
+        # Cerca la persona con il Person ID specificato
+        person = collectionP.find_one({'Person ID': person_id}, {'_id': 0})
+
+        # Restituisci i dettagli della persona come risposta JSON
+        return jsonify(person), 200
+
+    except Exception as e:
+        app.logger.error(f"Errore durante la richiesta GET: {str(e)}")  # Log per debugging
+        return jsonify({'error': str(e)}), 500
+
+
+#LETTURA DEI DIARI
 @app.route('/api/diario', methods=['GET'])
 def get_diario():
     try:
@@ -44,9 +61,8 @@ def get_diario():
         return jsonify({'error': str(e)}), 500
 
 
-
+# Collezione per il contatore, che tiene traccia dell'ultimo valore usato pre Person ID
 counters_collection = db['counters']
-
 # Funzione per ottenere il prossimo ID
 def get_next_sequence_value(sequence_name):
     sequence_document = counters_collection.find_one_and_update(
@@ -57,6 +73,7 @@ def get_next_sequence_value(sequence_name):
     )
     return sequence_document["sequence_value"]
 
+#CREAZIONE DI UNA PERSONA
 @app.route('/api/persona', methods=['POST'])
 def add_persona():
     try:
@@ -85,6 +102,69 @@ def add_persona():
         return jsonify({'error': str(e)}), 500
 
 
+#CREAZIONE DI UN DIARIO
+@app.route('/api/diario', methods=['POST'])
+def add_diario():
+    try:
+        # Ottieni i dati del diario dal corpo della richiesta
+        dataDiario = request.json
+        print("Dati ricevuti:", dataDiario)  # Log dei dati ricevuti
+
+        required_fields = ['Person ID', 'Sleep Duration', 'Quality of Sleep', 'Stress Level', 'Blood Pressure', 'Heart Rate', 'Daily Steps', 'Sleep Disorder']
+        for field in required_fields:
+            if field not in dataDiario or not dataDiario[field]:
+                return jsonify({'error': f'Dato mancante: {field}'}), 400
+
+        # Verifica se il Person ID esiste nella collezione persona
+        try:
+            person_id = int(dataDiario['Person ID'])  # Converte la stringa in un intero
+        except ValueError:
+            return jsonify({'error': 'Person ID non valido'}), 400
+
+        person_exists = collectionP.find_one({'Person ID': person_id})
+        if not person_exists:
+            return jsonify({'error': 'Person ID non valido'}), 400
+
+        # Inserisci i dati del diario nella collezione
+        result = collectionD.insert_one(dataDiario)
+        new_diario = collectionD.find_one({'_id': result.inserted_id}, {'_id': 0})
+
+        # Restituisci il nuovo record come risposta
+        return jsonify(new_diario), 201
+    except Exception as e:
+        # Gestisci eventuali errori e restituisci una risposta di errore
+        return jsonify({'error': str(e)}), 500
+
+
+#MODIFICA DI UN DIARIO
+@app.route('/api/diario/<int:person_id>', methods=['PUT'])
+def update_diario(person_id):
+    try:
+        # Ottieni i dati del diario dal corpo della richiesta
+        updated_data = request.json
+        print("Dati ricevuti per l'aggiornamento:", updated_data)  # Log dei dati ricevuti
+
+        # Verifica se il Person ID esiste nella collezione diario
+        existing_diario = collectionD.find_one({'Person ID': person_id})
+        if not existing_diario:
+            return jsonify({'error': 'Person ID non trovato'}), 404
+
+        # Aggiorna i dati del diario nella collezione
+        result = collectionD.update_one(
+            {'Person ID': person_id},
+            {'$set': updated_data}
+        )
+
+        # Restituisci il record aggiornato come risposta
+        updated_diario = collectionD.find_one({'Person ID': person_id}, {'_id': 0})
+        return jsonify(updated_diario), 200
+
+    except Exception as e:
+        # Gestisci eventuali errori e restituisci una risposta di errore
+        return jsonify({'error': str(e)}), 500
+
+
+#ELIMINAZIONE DI UNA PERSONA
 @app.route('/api/persona/<int:person_id>', methods=['DELETE'])
 def delete_persona(person_id):
     try:

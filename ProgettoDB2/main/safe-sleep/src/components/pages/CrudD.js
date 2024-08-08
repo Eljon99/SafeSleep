@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
 
-import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
-  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber} from '../layout/Crud.js';
+import { MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
+  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber } from '../layout/Crud.js';
 
 const UpdateButton = styled.button`
   background-color: green;
@@ -24,7 +24,11 @@ const CrudD = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Stato per tracciare la riga attualmente in modifica
+  const [editRow, setEditRow] = useState(null);
+
   const [formData, setFormData] = useState({
+    'Person ID': '',
     'Sleep Duration': '',
     'Quality of Sleep': '',
     'Stress Level': '',
@@ -34,27 +38,31 @@ const CrudD = () => {
     'Sleep Disorder': '',
   });
 
-// useEffect esegue effetti collaterali nel componente. In questo caso, esegue la funzione fetchSleepData quando il componente è montato.
-useEffect(() => {
-  // Chiamata alla funzione per recuperare i dati sul sonno
-  fetchSleepData();
-  // L'array vuoto indica che l'effetto deve essere eseguito solo una volta, al montaggio del componente
-}, []);
+  // Stato per gestire i dati del form di modifica
+  const [editFormData, setEditFormData] = useState({
+    'Person ID': '',
+    'Sleep Duration': '',
+    'Quality of Sleep': '',
+    'Stress Level': '',
+    'Blood Pressure': '',
+    'Heart Rate': '',
+    'Daily Steps': '',
+    'Sleep Disorder': '',
+  });
 
-// Funzione asincrona per recuperare i dati sul sonno
-const fetchSleepData = async () => {
-  try {
-    // Effettua una richiesta GET all'API per recuperare i dati
-    const response = await Axios.get('http://127.0.0.1:5000/api/diario');
-    // Stampa i dati ottenuti nella console per il debug
-    console.log('Fetched data:', response.data);
-    // Aggiorna lo stato del componente con i dati ottenuti
-    setSleepData(response.data);
-  } catch (error) {
-    // Se si verifica un errore durante la richiesta, stampa l'errore nella console
-    console.error('Error fetching data:', error);
-  }
-};
+  useEffect(() => {
+    fetchSleepData();
+  }, []);
+
+  const fetchSleepData = async () => {
+    try {
+      const response = await Axios.get('http://127.0.0.1:5000/api/diario');
+      console.log('Fetched data:', response.data);
+      setSleepData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -63,39 +71,92 @@ const fetchSleepData = async () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  // Funzione per gestire i cambiamenti nel form di modifica
+  const handleEditChange = (e) => {
+    setEditFormData({
+      ...editFormData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const { 'Person ID': personID, 'Sleep Duration': sleepDuration, 'Quality of Sleep': qualityOfSleep, 'Stress Level': stressLevel,
+      'Blood Pressure': bloodPressure, 'Heart Rate': heartRate, 'Daily Steps': dailySteps, 'Sleep Disorder': sleepDisorder } = formData;
+
+    if (!personID || !sleepDuration || !qualityOfSleep || !stressLevel || !bloodPressure || !heartRate || !dailySteps || !sleepDisorder) {
+      alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
+      return;
+    }
+
     try {
+      // Verifica se il Person ID esiste nel database
+      const personResponse = await Axios.get(`http://127.0.0.1:5000/api/persona/${personID}`);
+
+      if (!personResponse.data) {
+        alert('Person ID non trovato nel database. Verifica che la persona esista prima di aggiungere un diario.');
+        return;
+      }
+
+      // Se il Person ID esiste, invia i dati del diario
+      console.log("Dati inviati:", formData);
       const response = await Axios.post('http://127.0.0.1:5000/api/diario', formData);
-      setSleepData([...sleepData, response.data]);
+
+      if (response.data) {
+        setSleepData(prevData => [...prevData, response.data]);
+      }
+
       setFormData({
-            'Sleep Duration': '',
-            'Quality of Sleep': '',
-            'Stress Level': '',
-            'Blood Pressure': '',
-            'Heart Rate': '',
-            'Daily Steps': '',
-            'Sleep Disorder': '',
+        'Person ID': '',
+        'Sleep Duration': '',
+        'Quality of Sleep': '',
+        'Stress Level': '',
+        'Blood Pressure': '',
+        'Heart Rate': '',
+        'Daily Steps': '',
+        'Sleep Disorder': '',
       });
     } catch (error) {
       console.error('Error adding data:', error);
+
+      // Se c'è un errore nel trovare il Person ID o nell'aggiungere il diario
+      if (error.response && error.response.status === 404) {
+        alert('Person ID non trovato. Impossibile creare un diario per una persona inesistente.');
+      } else {
+        alert('Errore nella creazione del diario. Riprova più tardi.');
+      }
     }
+};
+
+  const handleUpdate = async (id) => {
+  try {
+    // Invia una richiesta PUT al server per aggiornare i dati
+    const response = await Axios.put(`http://127.0.0.1:5000/api/diario/${id}`, editFormData);
+
+    if (response.data) {
+      // Aggiorna i dati locali nello stato
+      setSleepData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
+
+      // Esci dalla modalità di modifica
+      setEditRow(null);
+    }
+  } catch (error) {
+    console.error('Error updating data:', error);
+  }
+};
+
+
+  // Funzione per gestire l'inizio della modifica di una riga
+  const handleEdit = (data) => {
+    setEditRow(data['Person ID']); // Imposta lo stato di modifica sulla riga selezionata
+    setEditFormData({ ...data }); // Imposta i dati del form di modifica con i dati della riga selezionata
   };
 
-  const handleUpdate = async (id, updatedData) => {
-    try {
-      // Effettua una richiesta PUT per aggiornare i dati
-      await Axios.put(`/api/diario/${id}`, updatedData);
-
-      // Aggiorna i dati locali
-      setSleepData(sleepData.map((data) =>
-        data.id === id ? { ...data, ...updatedData } : data
-      ));
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
+  // Funzione per annullare la modifica
+  const handleCancelEdit = () => {
+    setEditRow(null); // Rimuove lo stato di modifica senza salvare
   };
-
 
   const totalPages = Math.ceil(sleepData.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
@@ -104,38 +165,42 @@ const fetchSleepData = async () => {
   return (
     <MainLayout>
       <MainContainer>
-        <Title>Operazioni CRUD per il Diario</Title>
-        <Description>In questa pagine è possibile visualizzare, modificare e creare nuove informazioni riguardo al diario degli utenti.</Description>
+        <Title>Operazioni CRUD-Registro</Title>
+        <Description>In questa pagina è possibile visualizzare, modificare e aggiungere nuove informazioni riguardanti il sonno degli utenti.</Description>
 
         <Form onSubmit={handleSubmit}>
           <FormRow>
             <FormGroup>
-              <FormLabel>Sleep Duration</FormLabel>
-              <FormInput type="number" name="Sleep_Duration" value={formData['Sleep_Duration']} onChange={handleChange} />
+              <FormLabel>Person ID</FormLabel>
+              <FormInput type="number" name="Person ID" value={formData['Person ID']} onChange={handleChange} placeholder="Inserisci un numero" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Quality of Sleep</FormLabel>
-              <FormInput type="number" name="Quality_of_Sleep" value={formData['Quality_of_Sleep']} onChange={handleChange} />
+              <FormLabel>Durata del Sonno</FormLabel>
+              <FormInput type="number" name="Sleep Duration" value={formData['Sleep Duration']} onChange={handleChange} placeholder="Inserisci un numero" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Stress level</FormLabel>
-              <FormInput type="number" name="Stress_Level" value={formData['Stress_Level']} onChange={handleChange} />
+              <FormLabel>Qualità del Sonno</FormLabel>
+              <FormInput type="number" name="Quality of Sleep" value={formData['Quality of Sleep']} onChange={handleChange} placeholder="Inserisci un numero" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Blood Pressure</FormLabel>
-              <FormInput type="text" name="Blood_Pressure" value={formData['Blood_Pressure']} onChange={handleChange} />
+              <FormLabel>Livello dello Stress</FormLabel>
+              <FormInput type="number" name="Stress Level" value={formData['Stress Level']} onChange={handleChange} placeholder="Inserisci un numero" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Heart rate</FormLabel>
-              <FormInput type="number" name="Heart_Rate" value={formData['Heart_Rate']} onChange={handleChange} />
+              <FormLabel>Pressione Sanguigna</FormLabel>
+              <FormInput type="text" name="Blood Pressure" value={formData['Blood Pressure']} onChange={handleChange} placeholder="Inserisci la pressione sanguigna" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Daily steps</FormLabel>
-              <FormInput type="number" name="Daily_Steps" value={formData['Daily_Steps']} onChange={handleChange} />
+              <FormLabel>Battito Cardiaco</FormLabel>
+              <FormInput type="number" name="Heart Rate" value={formData['Heart Rate']} onChange={handleChange} placeholder="Inserisci un numero" />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Sleep Disorder</FormLabel>
-              <FormInput type="text" name="Sleep_Disorder" value={formData['Sleep_Disorder']} onChange={handleChange} />
+              <FormLabel>Passi Giornalieri</FormLabel>
+              <FormInput type="number" name="Daily Steps" value={formData['Daily Steps']} onChange={handleChange} placeholder="Inserisci un numero" />
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Disturbo del Sonno</FormLabel>
+              <FormInput type="text" name="Sleep Disorder" value={formData['Sleep Disorder']} onChange={handleChange} placeholder="Inserisci la durata del sonno" />
             </FormGroup>
           </FormRow>
           <FormButton type="submit">Aggiungi</FormButton>
@@ -144,27 +209,71 @@ const fetchSleepData = async () => {
           <Table>
             <thead>
               <TableRow>
-                <TableHeader>Sleep Duration</TableHeader>
-                <TableHeader>Quality of Sleep</TableHeader>
-                <TableHeader>Stress Level</TableHeader>
-                <TableHeader>Blood Pressure</TableHeader>
-                <TableHeader>Heart Rate</TableHeader>
-                <TableHeader>Daily Steps</TableHeader>
-                <TableHeader>Sleep Disorder</TableHeader>
+                <TableHeader>Person ID</TableHeader>
+                <TableHeader>Durata del Sonno</TableHeader>
+                <TableHeader>Qualità del Sonno</TableHeader>
+                <TableHeader>Livello dello Stress</TableHeader>
+                <TableHeader>Pressione Sanguigna</TableHeader>
+                <TableHeader>Battito Cardiaco</TableHeader>
+                <TableHeader>Passi Giornalieri</TableHeader>
+                <TableHeader>Disturbo del Sonno</TableHeader>
+                <TableHeader>Azione</TableHeader>
               </TableRow>
             </thead>
             <tbody>
               {currentItems.map((data) => (
-                <TableRow key={data.id}>
-                  <TableCell>{data['Sleep Disorder']}</TableCell>
-                  <TableCell>{data['Quality of Sleep']}</TableCell>
-                  <TableCell>{data['Stress Level']}</TableCell>
-                  <TableCell>{data['Blood Pressure']}</TableCell>
-                  <TableCell>{data['Daily Steps']}</TableCell>
-                  <TableCell>{data['Sleep Disorder']}</TableCell>
-                  <TableCell>
-                    <UpdateButton onClick={() => handleUpdate(data.id)}>Modifica</UpdateButton>
-                  </TableCell>
+                <TableRow key={data['Person ID']}>
+                  {editRow === data['Person ID'] ? (
+                    // Se la riga è in modifica, mostra il form di modifica
+                    <>
+                      <TableCell>
+                        <FormInput type="number" name="Person ID" value={editFormData['Person ID']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="number" name="Sleep Duration" value={editFormData['Sleep Duration']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="number" name="Quality of Sleep" value={editFormData['Quality of Sleep']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="number" name="Stress Level" value={editFormData['Stress Level']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="text" name="Blood Pressure" value={editFormData['Blood Pressure']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="number" name="Heart Rate" value={editFormData['Heart Rate']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="number" name="Daily Steps" value={editFormData['Daily Steps']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        <FormInput type="text" name="Sleep Disorder" value={editFormData['Sleep Disorder']} onChange={handleEditChange} />
+                      </TableCell>
+                      <TableCell>
+                        {/* Pulsante per salvare le modifiche */}
+                        <UpdateButton onClick={() => handleUpdate(data['Person ID'])}>Salva</UpdateButton>
+                        {/* Pulsante per annullare le modifiche */}
+                        <UpdateButton onClick={handleCancelEdit}>Annulla</UpdateButton>
+                      </TableCell>
+                    </>
+                  ) : (
+                    // Se la riga non è in modifica, mostra i dati normali
+                    <>
+                      <TableCell>{data['Person ID']}</TableCell>
+                      <TableCell>{data['Sleep Duration']}</TableCell>
+                      <TableCell>{data['Quality of Sleep']}</TableCell>
+                      <TableCell>{data['Stress Level']}</TableCell>
+                      <TableCell>{data['Blood Pressure']}</TableCell>
+                      <TableCell>{data['Heart Rate']}</TableCell>
+                      <TableCell>{data['Daily Steps']}</TableCell>
+                      <TableCell>{data['Sleep Disorder']}</TableCell>
+                      <TableCell>
+                        {/* Pulsante per iniziare la modifica */}
+                        <UpdateButton onClick={() => handleEdit(data)}>Modifica</UpdateButton>
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               ))}
             </tbody>
@@ -188,6 +297,6 @@ const fetchSleepData = async () => {
       </PaginationContainer>
     </MainLayout>
   );
-}
+};
 
 export default CrudD;
