@@ -6,6 +6,16 @@ import Axios from 'axios';
 import { MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
   TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber } from '../layout/Crud.js';
 
+const FormSelect = styled.select`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  font-size: 14px;
+  width: 100%;
+  background-color: white;
+  box-sizing: border-box;
+`;
+
 const UpdateButton = styled.button`
   background-color: green;
   color: white;
@@ -79,6 +89,36 @@ const CrudD = () => {
     });
   };
 
+const validateBloodPressure = (value) => {
+  // Espressione regolare per verificare il formato 'XXX/XX' dove X è un numero
+  const regex = /^\d{3}\/\d{2}$/;
+  return regex.test(value);
+};
+
+const validateNumberInRange = (value, min, max) => {
+  const num = Number(value);
+  return Number.isInteger(num) && num >= min && num <= max;
+};
+
+const validateSleepDuration = (sleepDuration) => {
+    const parsedValue = parseFloat(sleepDuration);
+
+    // Controlla se il valore è un numero tra 5 e 9 con al massimo una cifra decimale
+    const isValid = parsedValue >= 5 && parsedValue <= 9 && /^\d(\.\d)?$/.test(sleepDuration);
+
+    return isValid ? parsedValue : null;
+};
+
+const validateHeartRate = (heartRate) => {
+    const parsedValue = parseInt(heartRate, 10);
+
+    // Controlla se il valore è un intero tra 60 e 100
+    const isValid = Number.isInteger(parsedValue) && parsedValue >= 60 && parsedValue <= 100;
+
+    return isValid ? parsedValue : null;
+};
+
+
 const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -88,6 +128,35 @@ const handleSubmit = async (e) => {
     if (!personID || !sleepDuration || !qualityOfSleep || !stressLevel || !bloodPressure || !heartRate || !dailySteps || !sleepDisorder) {
       alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
       return;
+    }
+
+   // Valida la durata del sonno
+    const validSleepDuration = validateSleepDuration(sleepDuration);
+    if (validSleepDuration === null) {
+        alert('La durata del sonno deve essere un numero tra 5 e 9 con al massimo una cifra decimale.');
+        return;
+    }
+
+    if (!validateBloodPressure(bloodPressure)) {
+      alert('Il campo Pressione Sanguigna deve essere nel formato XXX/XX dove X è un numero"!');
+      return;
+    }
+
+    if (!validateNumberInRange(qualityOfSleep, 1, 9)) {
+      alert('La Qualità del Sonno deve essere un numero compreso tra 1 e 9!');
+      return;
+    }
+
+    if (!validateNumberInRange(stressLevel, 1, 9)) {
+      alert('Il Livello di Stress deve essere un numero compreso tra 1 e 9!');
+      return;
+    }
+
+    // Valida il battito cardiaco
+    const validHeartRate = validateHeartRate(heartRate);
+    if (validHeartRate === null) {
+        alert('Il battito cardiaco deve essere un intero tra 60 e 100.');
+        return;
     }
 
     try {
@@ -137,7 +206,7 @@ const handleSubmit = async (e) => {
     if (response.data) {
       // Aggiorna i dati locali nello stato
       setSleepData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
-
+      fetchSleepData();
       // Esci dalla modalità di modifica
       setEditRow(null);
     }
@@ -188,7 +257,7 @@ const handleSubmit = async (e) => {
             </FormGroup>
             <FormGroup>
               <FormLabel>Pressione Sanguigna</FormLabel>
-              <FormInput type="text" name="Blood Pressure" value={formData['Blood Pressure']} onChange={handleChange} placeholder="Inserisci la pressione sanguigna" />
+              <FormInput type="text" name="Blood Pressure" value={formData['Blood Pressure']} onChange={handleChange} placeholder="Usa il formato xxx/xx" />
             </FormGroup>
             <FormGroup>
               <FormLabel>Battito Cardiaco</FormLabel>
@@ -200,8 +269,14 @@ const handleSubmit = async (e) => {
             </FormGroup>
             <FormGroup>
               <FormLabel>Disturbo del Sonno</FormLabel>
-              <FormInput type="text" name="Sleep Disorder" value={formData['Sleep Disorder']} onChange={handleChange} placeholder="Inserisci la durata del sonno" />
+              <FormSelect name="Sleep Disorder" value={formData['Sleep Disorder']} onChange={handleChange} placeholder="Inserisci la durata del sonno">
+                <option value="">Seleziona</option>
+                <option value="None">None</option>
+                <option value="Insomnia">Insomnia</option>
+                <option value="Sleep Apnea">Sleep Apnea</option>
+              </FormSelect>
             </FormGroup>
+
           </FormRow>
           <FormButton type="submit">Aggiungi</FormButton>
         </Form>
@@ -227,7 +302,7 @@ const handleSubmit = async (e) => {
                     // Se la riga è in modifica, mostra il form di modifica
                     <>
                       <TableCell>
-                        <FormInput type="number" name="Person ID" value={editFormData['Person ID']} onChange={handleEditChange} />
+                          Person ID
                       </TableCell>
                       <TableCell>
                         <FormInput type="number" name="Sleep Duration" value={editFormData['Sleep Duration']} onChange={handleEditChange} />
@@ -248,7 +323,12 @@ const handleSubmit = async (e) => {
                         <FormInput type="number" name="Daily Steps" value={editFormData['Daily Steps']} onChange={handleEditChange} />
                       </TableCell>
                       <TableCell>
-                        <FormInput type="text" name="Sleep Disorder" value={editFormData['Sleep Disorder']} onChange={handleEditChange} />
+                        <FormSelect name="Sleep Disorder" value={formData['Sleep Disorder']} onChange={handleEditChange}>
+                          <option value="">Seleziona</option>
+                          <option value="None">None</option>
+                          <option value="Insomnia">Insomnia</option>
+                          <option value="Sleep Apnea">Sleep Apnea</option>
+                        </FormSelect>
                       </TableCell>
                       <TableCell>
                         {/* Pulsante per salvare le modifiche */}

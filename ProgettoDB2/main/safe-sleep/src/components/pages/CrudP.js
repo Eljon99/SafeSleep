@@ -72,12 +72,28 @@ const fetchSleepData = async () => {
     });
   };
 
+  const validateAge = (age) => {
+    const parsedValue = parseInt(age, 10);
+
+    // Controlla se il valore è un intero tra 1 e 100
+    const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 100;
+
+    return isValid ? parsedValue : null;
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { Gender, Age, Occupation, 'Physical Activity Level': activityLevel, 'BMI Category': bmiCategory } = formData;
     if (!Gender || !Age || !Occupation || !activityLevel || !bmiCategory) {
         alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
+        return;
+    }
+
+    // Valida l'età
+    const validAge = validateAge(Age);  // Assicurati che la funzione di validazione sia chiamata correttamente
+    if (validAge === null) {
+        alert('L\'età deve essere un intero tra 1 e 100.');
         return;
     }
 
