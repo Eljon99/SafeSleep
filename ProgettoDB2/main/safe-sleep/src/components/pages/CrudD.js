@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
+import { TextField} from '@mui/material';
 
 import { MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
   TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber } from '../layout/Crud.js';
@@ -283,80 +284,86 @@ const handleSubmit = async (e) => {
         <TableContainer>
           <Table>
             <thead>
-              <TableRow>
-                <TableHeader>Person ID</TableHeader>
-                <TableHeader>Durata del Sonno</TableHeader>
-                <TableHeader>Qualità del Sonno</TableHeader>
-                <TableHeader>Livello dello Stress</TableHeader>
-                <TableHeader>Pressione Sanguigna</TableHeader>
-                <TableHeader>Battito Cardiaco</TableHeader>
-                <TableHeader>Passi Giornalieri</TableHeader>
-                <TableHeader>Disturbo del Sonno</TableHeader>
-                <TableHeader>Azione</TableHeader>
-              </TableRow>
+            <TableRow>
+              <TableHeader>Person ID</TableHeader>
+              <TableHeader>Durata del Sonno</TableHeader>
+              <TableHeader>Qualità del Sonno</TableHeader>
+              <TableHeader>Livello dello Stress</TableHeader>
+              <TableHeader>Pressione Sanguigna</TableHeader>
+              <TableHeader>Battito Cardiaco</TableHeader>
+              <TableHeader>Passi Giornalieri</TableHeader>
+              <TableHeader>Disturbo del Sonno</TableHeader>
+              <TableHeader>Azione</TableHeader>
+            </TableRow>
             </thead>
             <tbody>
-              {currentItems.map((data) => (
+            {currentItems.map((data) => (
                 <TableRow key={data['Person ID']}>
                   {editRow === data['Person ID'] ? (
-                    // Se la riga è in modifica, mostra il form di modifica
-                    <>
-                      <TableCell>
-                          Person ID
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="number" name="Sleep Duration" value={editFormData['Sleep Duration']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="number" name="Quality of Sleep" value={editFormData['Quality of Sleep']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="number" name="Stress Level" value={editFormData['Stress Level']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="text" name="Blood Pressure" value={editFormData['Blood Pressure']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="number" name="Heart Rate" value={editFormData['Heart Rate']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormInput type="number" name="Daily Steps" value={editFormData['Daily Steps']} onChange={handleEditChange} />
-                      </TableCell>
-                      <TableCell>
-                        <FormSelect name="Sleep Disorder" value={formData['Sleep Disorder']} onChange={handleEditChange}>
-                          <option value="">Seleziona</option>
-                          <option value="None">None</option>
-                          <option value="Insomnia">Insomnia</option>
-                          <option value="Sleep Apnea">Sleep Apnea</option>
-                        </FormSelect>
-                      </TableCell>
-                      <TableCell>
-                        {/* Pulsante per salvare le modifiche */}
-                        <UpdateButton onClick={() => handleUpdate(data['Person ID'])}>Salva</UpdateButton>
-                        {/* Pulsante per annullare le modifiche */}
-                        <UpdateButton onClick={handleCancelEdit}>Annulla</UpdateButton>
-                      </TableCell>
-                    </>
+                      // Se la riga è in modifica, mostra il form di modifica
+                      <>
+                        <TableCell>{data['Person ID']}</TableCell>
+                        {['Sleep Duration', 'Quality of Sleep', 'Stress Level', 'Blood Pressure', 'Heart Rate', 'Daily Steps', 'Sleep Disorder'].map((key) => (
+                            <TableCell key={key}>
+                              {key === 'Sleep Disorder' ? (
+                                  <FormSelect
+                                      name={key}
+                                      value={editFormData[key]}
+                                      onChange={handleEditChange}
+                                      margin="dense"
+                                      size="small"
+                                  >
+                                    <option value="">Seleziona</option>
+                                    <option value="None">None</option>
+                                    <option value="Insomnia">Insomnia</option>
+                                    <option value="Sleep Apnea">Sleep Apnea</option>
+                                  </FormSelect>
+                              ) : (
+                                  <TextField
+                                      type={key === 'Blood Pressure' ? 'text' : 'number'}
+                                      name={key}
+                                      value={editFormData[key]}
+                                      onChange={handleEditChange}
+                                      margin="dense"
+                                      size="small"
+                                  />
+                              )}
+                            </TableCell>
+                        ))}
+                        <TableCell>
+                          {/* Pulsante per salvare le modifiche */}
+                          <UpdateButton onClick={() => handleUpdate(data['Person ID'])} variant="contained" color="success" size="small" style={{ marginBottom: '2px' }}>
+                            Salva
+                          </UpdateButton>
+                          {/* Pulsante per annullare le modifiche */}
+                          <UpdateButton onClick={handleCancelEdit} variant="contained" color="secondary" className="delete-button" size="small">
+                            Annulla
+                          </UpdateButton>
+                        </TableCell>
+                      </>
                   ) : (
-                    // Se la riga non è in modifica, mostra i dati normali
-                    <>
-                      <TableCell>{data['Person ID']}</TableCell>
-                      <TableCell>{data['Sleep Duration']}</TableCell>
-                      <TableCell>{data['Quality of Sleep']}</TableCell>
-                      <TableCell>{data['Stress Level']}</TableCell>
-                      <TableCell>{data['Blood Pressure']}</TableCell>
-                      <TableCell>{data['Heart Rate']}</TableCell>
-                      <TableCell>{data['Daily Steps']}</TableCell>
-                      <TableCell>{data['Sleep Disorder']}</TableCell>
-                      <TableCell>
-                        {/* Pulsante per iniziare la modifica */}
-                        <UpdateButton onClick={() => handleEdit(data)}>Modifica</UpdateButton>
-                      </TableCell>
-                    </>
+                      // Se la riga non è in modifica, mostra i dati normali
+                      <>
+                        <TableCell>{data['Person ID']}</TableCell>
+                        <TableCell>{data['Sleep Duration']}</TableCell>
+                        <TableCell>{data['Quality of Sleep']}</TableCell>
+                        <TableCell>{data['Stress Level']}</TableCell>
+                        <TableCell>{data['Blood Pressure']}</TableCell>
+                        <TableCell>{data['Heart Rate']}</TableCell>
+                        <TableCell>{data['Daily Steps']}</TableCell>
+                        <TableCell>{data['Sleep Disorder']}</TableCell>
+                        <TableCell>
+                          {/* Pulsante per iniziare la modifica */}
+                          <UpdateButton onClick={() => handleEdit(data)} variant="contained" color="success" size="small">
+                            Modifica
+                          </UpdateButton>
+                        </TableCell>
+                      </>
                   )}
                 </TableRow>
-              ))}
+            ))}
             </tbody>
+
           </Table>
         </TableContainer>
       </MainContainer>

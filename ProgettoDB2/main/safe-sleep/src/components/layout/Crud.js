@@ -93,8 +93,7 @@ export const TableContainer = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  border-radius: 7px; 
-  overflow: hidden; 
+  border-radius: 7px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
 `;
 

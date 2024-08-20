@@ -169,11 +169,16 @@ def update_diario(person_id):
 def delete_persona(person_id):
     try:
         # Cerca e elimina la persona con il Person ID specificato
-        result = collectionP.delete_one({"Person ID": person_id})
+        result_persona = collectionP.delete_one({"Person ID": person_id})
 
-        if result.deleted_count == 1:
-            # Se la persona è stata eliminata con successo
-            return jsonify({'message': 'Persona eliminata con successo'}), 200
+        if result_persona.deleted_count == 1:
+            # Se la persona è stata eliminata con successo, elimina anche il diario/registro associato
+            result_diario = collectionD.delete_many({"Person ID": person_id})
+
+            return jsonify({
+                'message': 'Persona e diario/registro associato eliminati con successo',
+                'deleted_diaries_count': result_diario.deleted_count
+            }), 200
         else:
             # Se non è stata trovata nessuna persona con il Person ID specificato
             return jsonify({'message': 'Persona non trovata'}), 404
