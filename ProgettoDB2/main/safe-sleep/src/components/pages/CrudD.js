@@ -138,16 +138,19 @@ const handleSubmit = async (e) => {
         return;
     }
 
+    // Valida la blood pressure
     if (!validateBloodPressure(bloodPressure)) {
       alert('Il campo Pressione Sanguigna deve essere nel formato XXX/XX dove X è un numero"!');
       return;
     }
 
+    // Valida la qualità del sonno
     if (!validateNumberInRange(qualityOfSleep, 1, 9)) {
       alert('La Qualità del Sonno deve essere un numero compreso tra 1 e 9!');
       return;
     }
 
+    // Valida il livello di stress
     if (!validateNumberInRange(stressLevel, 1, 9)) {
       alert('Il Livello di Stress deve essere un numero compreso tra 1 e 9!');
       return;
@@ -199,22 +202,56 @@ const handleSubmit = async (e) => {
     }
 };
 
-  const handleUpdate = async (id) => {
-  try {
-    // Invia una richiesta PUT al server per aggiornare i dati
-    const response = await Axios.put(`http://127.0.0.1:5000/api/diario/${id}`, editFormData);
+ const handleUpdate = async (id) => {
+    const { 'Person ID': personID, 'Sleep Duration': sleepDuration, 'Quality of Sleep': qualityOfSleep, 'Stress Level': stressLevel,
+      'Blood Pressure': bloodPressure, 'Heart Rate': heartRate, 'Daily Steps': dailySteps, 'Sleep Disorder': sleepDisorder } = editFormData;
 
-    if (response.data) {
-      // Aggiorna i dati locali nello stato
-      setSleepData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
-      fetchSleepData();
-      // Esci dalla modalità di modifica
-      setEditRow(null);
+
+    // Valida la durata del sonno
+    const validSleepDuration = validateSleepDuration(sleepDuration);
+    if (validSleepDuration === null) {
+        alert('La durata del sonno deve essere un numero tra 5 e 9 con al massimo una cifra decimale.');
+        return;
     }
-  } catch (error) {
-    console.error('Error updating data:', error);
-  }
+
+    if (!validateBloodPressure(bloodPressure)) {
+      alert('Il campo Pressione Sanguigna deve essere nel formato XXX/XX dove X è un numero!');
+      return;
+    }
+
+    if (!validateNumberInRange(qualityOfSleep, 1, 9)) {
+      alert('La Qualità del Sonno deve essere un numero compreso tra 1 e 9!');
+      return;
+    }
+
+    if (!validateNumberInRange(stressLevel, 1, 9)) {
+      alert('Il Livello di Stress deve essere un numero compreso tra 1 e 9!');
+      return;
+    }
+
+    // Valida il battito cardiaco
+    const validHeartRate = validateHeartRate(heartRate);
+    if (validHeartRate === null) {
+        alert('Il battito cardiaco deve essere un intero tra 60 e 100.');
+        return;
+    }
+
+    try {
+        // Invia una richiesta PUT al server per aggiornare i dati
+        const response = await Axios.put(`http://127.0.0.1:5000/api/diario/${id}`, editFormData);
+
+        if (response.data) {
+            // Aggiorna i dati locali nello stato
+            setSleepData(prevData => prevData.map(item => (item.id === id ? response.data : item)));
+            fetchSleepData();
+            // Esci dalla modalità di modifica
+            setEditRow(null);
+        }
+    } catch (error) {
+        console.error('Error updating data:', error);
+    }
 };
+
 
 
   // Funzione per gestire l'inizio della modifica di una riga
