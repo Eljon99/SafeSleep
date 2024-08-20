@@ -185,3 +185,44 @@ def delete_persona(person_id):
     except Exception as e:
         # Gestisci eventuali errori e restituisci una risposta di errore
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/activity-sleep-correlation', methods=['GET'])
+def get_activity_sleep_correlation():
+    try:
+        pipeline = [
+            {
+                "$lookup": {
+                    "from": "diario_persona",
+                    "localField": "Person ID",
+                    "foreignField": "Person ID",
+                    "as": "diary_info"
+                }
+            },
+            {
+                "$unwind": "$diary_info"
+            },
+            {
+                "$lookup": {
+                    "from": "persona",
+                    "localField": "Person ID",
+                    "foreignField": "Person ID",
+                    "as": "person_info"
+                }
+            },
+            {
+                "$unwind": "$person_info"
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                    "Person ID": 1,
+                    "Age": "$person_info.Age",  # Aggiungi 'Age' dalla collezione 'persona'
+                    "Quality of Sleep": "$diary_info.Quality of Sleep"
+                }
+            }
+        ]
+        results = list(collectionP.aggregate(pipeline))
+        return jsonify(results), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

@@ -22,7 +22,7 @@ const TextContainer = styled.div`
   padding: 30px; // Aggiungi padding se necessario
 `;
 
-const FormContainer = styled.div`
+const Container = styled.div`
   background-color: rgba(245, 245, 245, 0.7);
   padding: 20px;
   border-radius: 10px;
@@ -36,7 +36,7 @@ const Home = () => {
   return (
     <MainLayout>
               <div>
-              <FormContainer>
+              <Container>
                   <Slider />
                   <TextContainer>
                     <Title>safeSleep</Title>
@@ -52,7 +52,7 @@ const Home = () => {
                       Integer tincidunt. Cras dapibus.
                     </BodyText>
                   </TextContainer>
-             </FormContainer>
+             </Container>
           </div>
     </MainLayout>
   );
