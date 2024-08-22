@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell  } from 'recharts';
+
+
 
 const Title = styled.h1`
   color: darkslategrey;
@@ -28,10 +30,12 @@ const Container = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;  // Cambia a colonna per includere il grafico
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 20px 0px 20px 0px;  
 `;
+
 
 const ChartContainer = styled.div`
   width: 100%;
@@ -39,13 +43,21 @@ const ChartContainer = styled.div`
   margin-top: 30px;
 `;
 
+const Select = styled.select`
+  margin-bottom: 20px;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
 const ActivitySleepCorrelation = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/api/activity-sleep-correlation')  // Chiamata all'API Flask
+        fetch('http://127.0.0.1:5000/api/activity-sleep-correlation')
             .then(response => response.json())
-            .then(data => setData(data))  // Imposta i dati nel state
+            .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
@@ -56,13 +68,8 @@ const ActivitySleepCorrelation = () => {
                 margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                    dataKey="Age"  // Modificato per usare 'Age'
-                    domain={[0, 100]} // Imposta il range dell'asse X
-                />
-                <YAxis
-                    domain={[0, 10]} // Imposta il range dell'asse Y
-                />
+                <XAxis dataKey="Age" domain={[0, 100]} />
+                <YAxis domain={[0, 10]} />
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="Quality of Sleep" stroke="#8884d8" dot={false} />
@@ -71,7 +78,52 @@ const ActivitySleepCorrelation = () => {
     );
 };
 
+// Colori per le sezioni del diagramma a torta
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const ActivityLevelDistribution = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/api/activity-level-distribution')
+            .then(response => response.json())
+            .then(data => setData(data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    const COLORS = ['darkBlue', 'darkRed', 'darkGreen', '#FF6384'];
+
+    return (
+        <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+                <Pie
+                    data={data}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={150}
+                    fill="#8884d8"
+                    label={({ name }) => `${name}`}  // Mostra il campo "name" nelle etichette
+                >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                </Pie>
+
+                <Tooltip />
+            </PieChart>
+        </ResponsiveContainer>
+    );
+};
+
+
+
 const Metrics = () => {
+
+  // Stato per tenere traccia della metrica selezionata dal menu a tendina
+  const [selectedMetric, setSelectedMetric] = useState('');
+
   return (
     <MainLayout>
       <div>
@@ -79,10 +131,23 @@ const Metrics = () => {
           <TextContainer>
             <Title>Metrics</Title>
             <BodyText>
-              Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:
+              Benvenuto nella pagina delle metriche. Seleziona una metrica dal menu a tendina per visualizzarla.
             </BodyText>
           </TextContainer>
-          <ActivitySleepCorrelation />  {/* Aggiungi il grafico qui */}
+
+            <Select value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
+                <option value="">Seleziona una metrica</option>
+                <option value="eta-qualitaSonno">Età-Qualità del Sonno</option>
+                <option value="livelliAttivitaFisica">Distribuzione Livelli Attività Fisica</option>
+                {/* Aggiungi altre metriche qui */}
+
+            </Select>
+
+            {selectedMetric === 'eta-qualitaSonno' && <ActivitySleepCorrelation/>}
+            {selectedMetric === 'livelliAttivitaFisica' && <ActivityLevelDistribution />}
+
+          {/* Condiziona la visualizzazione di altre metriche qui */}
+
         </Container>
       </div>
     </MainLayout>

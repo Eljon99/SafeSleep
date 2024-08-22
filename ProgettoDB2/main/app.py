@@ -226,3 +226,33 @@ def get_activity_sleep_correlation():
         return jsonify(results), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/activity-level-distribution', methods=['GET'])
+def get_activity_level_distribution():
+    try:
+        pipeline = [
+            {
+                "$bucket": {
+                    "groupBy": "$Physical Activity Level",
+                    "boundaries": [30, 46, 61, 76, 91],  # Definisci i limiti dei range
+                    "default": "Other",  # Valori fuori dai range specificati
+                    "output": {
+                        "count": {"$sum": 1}
+                    }
+                }
+            }
+        ]
+        results = list(collectionP.aggregate(pipeline))
+
+        # Formatta i risultati per renderli compatibili con il frontend
+        formatted_results = [
+            {"name": f"{result['_id']} - {result['_id'] + 15}", "value": result["count"]}
+            for result in results if result["_id"] != "Other"
+        ]
+
+        return jsonify(formatted_results), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
