@@ -256,3 +256,52 @@ def get_activity_level_distribution():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/bmi-stress-correlation', methods=['GET'])
+def get_bmi_stress_correlation():
+    try:
+        pipeline = [
+            {
+                "$lookup": {
+                    "from": "diario_persona",
+                    "localField": "Person ID",
+                    "foreignField": "Person ID",
+                    "as": "diary_info"
+                }
+            },
+            {
+                "$unwind": "$diary_info"
+            },
+            {
+                "$lookup": {
+                    "from": "persona",
+                    "localField": "Person ID",
+                    "foreignField": "Person ID",
+                    "as": "person_info"
+                }
+            },
+            {
+                "$unwind": "$person_info"
+            },
+            {
+                "$group": {
+                    "_id": "$person_info.BMI Category",
+                    "Average Stress Level": {"$avg": "$diary_info.Stress Level"}
+                }
+            },
+            {
+                # Arrotonda il valore di Average Stress Level a due decimali
+                "$project": {
+                    "_id": 0,
+                    "BMI Category": "$_id",
+                    "Average Stress Level": {
+                        "$round": ["$Average Stress Level", 2]
+                    }
+                }
+            }
+        ]
+        results = list(collectionP.aggregate(pipeline))
+        return jsonify(results), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+

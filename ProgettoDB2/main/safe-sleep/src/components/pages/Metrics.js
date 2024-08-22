@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell  } from 'recharts';
-
-
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell  } from 'recharts';
 
 const Title = styled.h1`
   color: darkslategrey;
@@ -34,13 +32,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   margin: 20px 0px 20px 0px;  
-`;
-
-
-const ChartContainer = styled.div`
-  width: 100%;
-  height: 500px;
-  margin-top: 30px;
 `;
 
 const Select = styled.select`
@@ -118,6 +109,33 @@ const ActivityLevelDistribution = () => {
 };
 
 
+const BMIStressCorrelation = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/api/bmi-stress-correlation')
+            .then(response => response.json())
+            .then(data => setData(data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    return (
+        <ResponsiveContainer width="100%" height={500}>
+            <BarChart
+                data={data}
+                margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="BMI Category" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Average Stress Level" fill="#8884d8" />
+            </BarChart>
+        </ResponsiveContainer>
+    );
+};
+
 
 const Metrics = () => {
 
@@ -137,15 +155,16 @@ const Metrics = () => {
 
             <Select value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
                 <option value="">Seleziona una metrica</option>
-                <option value="eta-qualitaSonno">Età-Qualità del Sonno</option>
+                <option value="eta-qualitaSonno">Correlazione Qualità del Sonno - Età</option>
                 <option value="livelliAttivitaFisica">Distribuzione Livelli Attività Fisica</option>
+                <option value="bmi-stress">Correlazione Livello di Stress - BMI</option>
                 {/* Aggiungi altre metriche qui */}
 
             </Select>
 
             {selectedMetric === 'eta-qualitaSonno' && <ActivitySleepCorrelation/>}
             {selectedMetric === 'livelliAttivitaFisica' && <ActivityLevelDistribution />}
-
+            {selectedMetric === 'bmi-stress' && <BMIStressCorrelation />}
           {/* Condiziona la visualizzazione di altre metriche qui */}
 
         </Container>

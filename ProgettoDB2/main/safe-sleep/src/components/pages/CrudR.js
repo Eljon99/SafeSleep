@@ -30,7 +30,7 @@ const UpdateButton = styled.button`
   }
 `;
 
-const CrudD = () => {
+const CrudR = () => {
   const [sleepData, setSleepData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -423,4 +423,4 @@ const handleSubmit = async (e) => {
   );
 };
 
-export default CrudD;
+export default CrudR;

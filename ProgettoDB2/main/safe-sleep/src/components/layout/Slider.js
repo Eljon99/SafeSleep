@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
-import myImage1 from '../../assets/quadrato3.jpg';
-import myImage2 from '../../assets/quadrato2.jpg';
+import myImage1 from '../../assets/1.jpg';
+import myImage2 from '../../assets/2_2.jpg';
+import myImage3 from '../../assets/3_3.jpg';
 
 // Styled-components per il contenitore dello slider
 const SliderContainer = styled.div`
@@ -66,7 +67,7 @@ const NavButton = styled.button`
 `;
 
 const Slider = () => {
-  const images = [myImage1, myImage2]; // Array di immagini
+  const images = [myImage1, myImage2, myImage3]; // Array di immagini
   const [currentSlide, setCurrentSlide] = useState(0); // Stato per la slide corrente
 
   // Riferimento per l'intervallo automatico
@@ -86,7 +87,7 @@ const Slider = () => {
 
   // Effetto per l'autoplay
   useEffect(() => {
-    slideInterval.current = setInterval(nextSlide, 8000); // Cambia immagine ogni 8 secondi
+    slideInterval.current = setInterval(nextSlide, 3000); // Cambia immagine ogni 3 secondi
 
     // Pulizia dell'intervallo quando il componente viene smontato
     return () => {
@@ -99,7 +100,7 @@ const Slider = () => {
     clearInterval(slideInterval.current);
     navFunction();
     // Riavvia l'intervallo automatico
-    slideInterval.current = setInterval(nextSlide, 8000);
+    slideInterval.current = setInterval(nextSlide, 3000);
   };
 
   return (
