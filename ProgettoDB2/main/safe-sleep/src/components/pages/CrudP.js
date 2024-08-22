@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
 import Axios from 'axios';
-import {MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
-  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber} from '../layout/Crud.js';
-
+import { MainContainer, Title, Description, Form, FormRow, FormGroup, FormLabel, FormInput, FormButton, TableContainer, Table,
+  TableHeader, TableRow, TableCell, PaginationButton, SmallPaginationButton, PaginationContainer, PageNumber } from '../layout/Crud.js';
 
 const FormSelect = styled.select`
   padding: 8px;
@@ -15,7 +14,6 @@ const FormSelect = styled.select`
   background-color: white;
   box-sizing: border-box;
 `;
-
 
 const DeleteButton = styled.button`
   background-color: red;
@@ -30,40 +28,42 @@ const DeleteButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  background-color: #fdd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid red;
+`;
+
 const CrudP = () => {
   const [sleepData, setSleepData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [errorMessage, setErrorMessage] = useState(''); // Stato per gestire il messaggio di errore
   const itemsPerPage = 8;
 
   const [formData, setFormData] = useState({
     Gender: '',
     Age: '',
     Occupation: '',
-    'Physical Activity Level' : '',
-    'BMI Category' : '',
+    'Physical Activity Level': '',
+    'BMI Category': '',
   });
 
-// useEffect esegue effetti collaterali nel componente. In questo caso, esegue la funzione fetchSleepData quando il componente è montato.
-useEffect(() => {
-  // Chiamata alla funzione per recuperare i dati sul sonno
-  fetchSleepData();
-  // L'array vuoto indica che l'effetto deve essere eseguito solo una volta, al montaggio del componente
-}, []);
+  useEffect(() => {
+    fetchSleepData();
+  }, []);
 
-// Funzione asincrona per recuperare i dati sul sonno
-const fetchSleepData = async () => {
-  try {
-    // Effettua una richiesta GET all'API per recuperare i dati
-    const response = await Axios.get('http://127.0.0.1:5000/api/persona');
-    // Stampa i dati ottenuti nella console per il debug
-    console.log('Fetched data:', response.data);
-    // Aggiorna lo stato del componente con i dati ottenuti
-    setSleepData(response.data);
-  } catch (error) {
-    // Se si verifica un errore durante la richiesta, stampa l'errore nella console
-    console.error('Error fetching data:', error);
-  }
-};
+  const fetchSleepData = async () => {
+    try {
+      const response = await Axios.get('http://127.0.0.1:5000/api/persona');
+      setSleepData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -74,64 +74,88 @@ const fetchSleepData = async () => {
 
   const validateAge = (age) => {
     const parsedValue = parseInt(age, 10);
-
-    // Controlla se il valore è un intero tra 1 e 100
     const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 100;
-
     return isValid ? parsedValue : null;
+  };
+
+  const validateOccupation = (occupation) => {
+  // Verifica se l'input è una stringa
+  if (typeof occupation !== 'string') {
+    return null;
+  }
+
+  // Controlla che la stringa non contenga numeri
+  const hasNumbers = /\d/.test(occupation);
+  if (hasNumbers) {
+    return null;
+  }
+
+  // Se è una stringa e non contiene numeri, restituiscila
+  return occupation;
 };
+
+
+  const validatePhysicalActivityLevel = (pal) => {
+    const parsedValue = parseInt(pal, 10);
+    const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 100;
+    return isValid ? parsedValue : null;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { Gender, Age, Occupation, 'Physical Activity Level': activityLevel, 'BMI Category': bmiCategory } = formData;
+
     if (!Gender || !Age || !Occupation || !activityLevel || !bmiCategory) {
-        alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
-        return;
+      setErrorMessage('Per aggiungere i dati di una nuova persona, compila tutti i campi!');
+      return;
     }
 
-    // Valida l'età
-    const validAge = validateAge(Age);  // Assicurati che la funzione di validazione sia chiamata correttamente
+    const validAge = validateAge(Age);
     if (validAge === null) {
-        alert('L\'età deve essere un intero tra 1 e 100.');
-        return;
+      setErrorMessage('L\'età deve essere un intero tra 1 e 100.');
+      return;
+    }
+
+    const validOccupation = validateOccupation(Occupation);
+    if (validOccupation === null) {
+      setErrorMessage('L\'occupazione deve essere una stringa');
+      return;
+    }
+
+    const validPAL = validatePhysicalActivityLevel(activityLevel);
+    if (validPAL === null) {
+      setErrorMessage('Il Livello di Attività Fisica deve essere un intero.');
+      return;
     }
 
     try {
-        // Invia i dati al server per aggiungere una nuova persona
-        const response = await Axios.post('http://127.0.0.1:5000/api/persona', formData);
-
-        // Verifica se la risposta contiene i nuovi dati e aggiornali
-        if (response.data) {
-            setSleepData(prevData => [...prevData, response.data]); // Aggiorna lo stato con il nuovo dato
-        }
-
-        // Resetta il form
+      const response = await Axios.post('http://127.0.0.1:5000/api/persona', formData);
+      if (response.data) {
+        setSleepData(prevData => [...prevData, response.data]);
         setFormData({
-            Gender: '',
-            Age: '',
-            Occupation: '',
-            'Physical Activity Level' : '',
-            'BMI Category' : '',
+          Gender: '',
+          Age: '',
+          Occupation: '',
+          'Physical Activity Level': '',
+          'BMI Category': '',
         });
+        setErrorMessage(''); // Resetta il messaggio di errore
+      }
     } catch (error) {
-        console.error('Error adding data:', error);
+      console.error('Error adding data:', error);
+      setErrorMessage('Si è verificato un errore durante l\'aggiunta dei dati.'); // Mostra un messaggio di errore generico
     }
-};
+  };
 
-
-const handleDelete = async (person_id) => {
-  try {
-    await Axios.delete(`http://127.0.0.1:5000/api/persona/${person_id}`);
-    setSleepData(sleepData.filter((data) => data['Person ID'] !== person_id));
-  } catch (error) {
-    console.error('Error deleting data:', error);
-  }
-};
-
-// Assicurati di passare il Persona ID corretto quando chiami handleDelete
-
-
+  const handleDelete = async (person_id) => {
+    try {
+      await Axios.delete(`http://127.0.0.1:5000/api/persona/${person_id}`);
+      setSleepData(sleepData.filter((data) => data['Person ID'] !== person_id));
+    } catch (error) {
+      console.error('Error deleting data:', error);
+    }
+  };
 
   const totalPages = Math.ceil(sleepData.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
@@ -142,6 +166,8 @@ const handleDelete = async (person_id) => {
       <MainContainer>
         <Title>Operazioni CRUD-Persona</Title>
         <Description>In questa pagine è possibile visualizzare, eliminare e creare nuove informazioni riguardo tutti i dati delle persone del database.</Description>
+
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Mostra l'errore se presente */}
 
         <Form onSubmit={handleSubmit}>
           <FormRow>
@@ -154,7 +180,7 @@ const handleDelete = async (person_id) => {
                 <option value="Other">Other</option>
               </FormSelect>
             </FormGroup>
-           <FormGroup>
+            <FormGroup>
               <FormLabel>Età</FormLabel>
               <FormInput
                 type="number"
@@ -188,10 +214,10 @@ const handleDelete = async (person_id) => {
               <FormLabel>Categoria BMI</FormLabel>
               <FormSelect name="BMI Category" value={formData['BMI Category']} onChange={handleChange}>
                 <option value="">Seleziona</option>
-                <option value="underweight">Underweight</option>
-                <option value="normal">Normal</option>
-                <option value="overweight">Overweight</option>
-                <option value="obese">Obese</option>
+                <option value="Underweight">Underweight</option>
+                <option value="Normal">Normal</option>
+                <option value="Overweight">Overweight</option>
+                <option value="Obese">Obese</option>
               </FormSelect>
             </FormGroup>
           </FormRow>
