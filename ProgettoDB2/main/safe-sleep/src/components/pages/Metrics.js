@@ -5,7 +5,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 
 const Title = styled.h1`
   color: darkslategrey;
-  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-size: 72px;
   margin-bottom: 30px;
   text-align: center;
@@ -31,7 +31,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 20px 0px 20px 0px;  
+  margin: 20px 0 20px 0;  
 `;
 
 const Select = styled.select`

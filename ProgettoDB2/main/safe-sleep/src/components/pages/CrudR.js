@@ -30,10 +30,22 @@ const UpdateButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  background-color: #fdd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid red;
+  text-align: center;  
+`;
+
 const CrudR = () => {
   const [sleepData, setSleepData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Stato per tracciare la riga attualmente in modifica
   const [editRow, setEditRow] = useState(null);
@@ -127,7 +139,7 @@ const handleSubmit = async (e) => {
       'Blood Pressure': bloodPressure, 'Heart Rate': heartRate, 'Daily Steps': dailySteps, 'Sleep Disorder': sleepDisorder } = formData;
 
     if (!personID || !sleepDuration || !qualityOfSleep || !stressLevel || !bloodPressure || !heartRate || !dailySteps || !sleepDisorder) {
-      alert('Per aggiungere i dati di una nuova persona compila tutti i campi!');
+      setErrorMessage('Per aggiungere i dati di una nuova persona, compila tutti i campi!');
       return;
     }
 
@@ -190,6 +202,7 @@ const handleSubmit = async (e) => {
         'Daily Steps': '',
         'Sleep Disorder': '',
       });
+      setErrorMessage('');
     } catch (error) {
       console.error('Error adding data:', error);
 
@@ -274,6 +287,8 @@ const handleSubmit = async (e) => {
       <MainContainer>
         <Title>Operazioni CRUD-Registro</Title>
         <Description>In questa pagina è possibile visualizzare, modificare e aggiungere nuove informazioni riguardanti il sonno degli utenti.</Description>
+
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Mostra l'errore se presente */}
 
         <Form onSubmit={handleSubmit}>
           <FormRow>

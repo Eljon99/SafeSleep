@@ -36,6 +36,7 @@ const ErrorMessage = styled.div`
   border-radius: 5px;
   font-size: 14px;
   border: 1px solid red;
+  text-align: center;
 `;
 
 const CrudP = () => {
