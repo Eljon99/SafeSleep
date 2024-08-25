@@ -12,6 +12,7 @@ export const MainContainer = styled.div`
 
 export const Title = styled.h1`
   color: darkslategrey;
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);  
   text-align: center;
   margin-bottom: 10px;
   font-size: 42px;
