@@ -1,13 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 import MainLayout from '../layout/MainLayout';
+import image from '../../assets/SleepLogo2.png'; // Importa l'immagine
 
 const Title = styled.h1`
   color: darkslategrey;
   text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
   font-size: 72px;
-  margin-bottom: 30px;
-  text-align: center; // Centrare il titolo
+  margin-bottom: 1px;
+  text-align: center;
+`;
+
+const Subtitle = styled.h1`
+  color: darkslategrey;
+  margin-bottom: 1px;
+  text-align: center;
+`;
+
+const Image = styled.img`
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 0 auto 30px;
+  border-radius: 10px;
+`;
+
+const LicenseText = styled.p`
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+  font-style: italic;
+
+  a {
+    color: #007BFF; /* Colore del link */
+    text-decoration: none; /* Rimuove la sottolineatura */
+    
+    &:hover {
+      text-decoration: underline; /* Sottolinea il link al passaggio del mouse */
+    }
+  }
 `;
 
 const BodyText = styled.p`
@@ -15,11 +47,13 @@ const BodyText = styled.p`
   color: #666;
   max-width: 600px;
   text-align: center;
+  padding-bottom: 20px;
 `;
+
 
 export const MainContainer = styled.div`
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   background-color: rgba(245, 245, 245, 0.7);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
   border-radius: 10px;
@@ -31,14 +65,27 @@ const Info = () => {
   return (
     <MainLayout>
       <MainContainer>
-          <div>
-            <Title>Info</Title>
-            <BodyText>
-              Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:
-              <br /><br />
-              Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui international first-class nulla ut. Punctual adipisicing, essential lovely queen tempor eiusmod iure. Exclusive izakaya charming Scandinavian impeccable aute quality of life soft power pariatur Melbourne occaecat discerning. Qui wardrobe aliquid, et Porter destination Toto remarkable officia Helsinki excepteur Basset hound. Zürich sleepy perfect consectetur.
-            </BodyText>
-          </div>
+        <div>
+          <Title>SafeSleep</Title>
+          <Image src={image} alt="Descrizione dell'immagine" />
+          <LicenseText>
+            Progetto creato da <a href="https://github.com/Eljon99">Eljon Hida</a> e <a href="https://github.com/luicons01">Luigi Consiglio</a>.
+            Licenza MIT.
+            <br/>
+            Tutti i diritti riservati © 2024.
+          </LicenseText>
+          <Subtitle>Informazioni</Subtitle>
+          <BodyText>
+            L'obiettivo di <em>SafeSleep</em> è quello di registrare dati inerenti al sonno di persone e notare come fattori
+            quali:età, livello attività fisica, BMI ecc. influiscano sulla qualità del sonno e viceversa.
+            <br/><br/>
+            Le tecnologie utilizzate per lo sviluppo di tale progetto sono:<br/>
+            <strong style={{color: 'black', fontSize: '20px'}}>Python | React | MongoDB | Flask | PyCharm</strong>
+            <br/><br/>
+            Il progetto è stato effettuato usando dati provenienti dal dataset di <a href={'https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset'}>Kaggle</a>
+             &nbsp;ed è situato nella seguente repository di <a href={'https://github.com/Eljon99/SafeSleep'}>GitHub</a>.
+          </BodyText>
+        </div>
       </MainContainer>
     </MainLayout>
   );
