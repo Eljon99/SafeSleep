@@ -45,9 +45,8 @@ const MainLayout = ({ children }) => {
           </div>
         </Content>
         <Footer>
-          <SocialIcon href="https://instagram.com">Instagram</SocialIcon>
-          <SocialIcon href="https://youtube.com">YouTube</SocialIcon>
-          <SocialIcon href="https://linkedin.com">LinkedIn</SocialIcon>
+          <SocialIcon href="https://github.com/Eljon99/SafeSleep">GitHub</SocialIcon>
+          <SocialIcon href="https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset">Kaggle</SocialIcon>
         </Footer>
       </Container>
   );

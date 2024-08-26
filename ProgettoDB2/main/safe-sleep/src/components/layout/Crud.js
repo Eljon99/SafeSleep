@@ -19,7 +19,8 @@ export const Title = styled.h1`
 `;
 
 export const Description = styled.p`
-  color: black;
+  font-size: 20px;  
+  color: #555;
   text-align: center;
   margin-bottom: 20px;
 `;

@@ -131,7 +131,6 @@ const validateHeartRate = (heartRate) => {
     return isValid ? parsedValue : null;
 };
 
-
 const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -219,7 +218,6 @@ const handleSubmit = async (e) => {
     const { 'Person ID': personID, 'Sleep Duration': sleepDuration, 'Quality of Sleep': qualityOfSleep, 'Stress Level': stressLevel,
       'Blood Pressure': bloodPressure, 'Heart Rate': heartRate, 'Daily Steps': dailySteps, 'Sleep Disorder': sleepDisorder } = editFormData;
 
-
     // Valida la durata del sonno
     const validSleepDuration = validateSleepDuration(sleepDuration);
     if (validSleepDuration === null) {
@@ -266,7 +264,6 @@ const handleSubmit = async (e) => {
 };
 
 
-
   // Funzione per gestire l'inizio della modifica di una riga
   const handleEdit = (data) => {
     setEditRow(data['Person ID']); // Imposta lo stato di modifica sulla riga selezionata
@@ -286,7 +283,8 @@ const handleSubmit = async (e) => {
     <MainLayout>
       <MainContainer>
         <Title>Operazioni CRUD-Registro</Title>
-        <Description>In questa pagina è possibile visualizzare, modificare e aggiungere nuove informazioni riguardanti il sonno degli utenti.</Description>
+        <Description>Questa pagina ti consente di gestire tutte le informazioni relative ai registri del sonno degli utenti.
+            <br /> Puoi visualizzare i dati esistenti, aggiungere nuove registrazioni e modificare le informazioni già presenti.</Description>
 
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Mostra l'errore se presente */}
 

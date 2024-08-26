@@ -13,7 +13,7 @@ const Title = styled.h1`
 
 const BodyText = styled.p`
   font-size: 20px;
-  color: #666;
+  color: #555;
   max-width: 600px;
 `;
 
@@ -69,9 +69,6 @@ const ActivitySleepCorrelation = () => {
     );
 };
 
-// Colori per le sezioni del diagramma a torta
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
 const ActivityLevelDistribution = () => {
     const [data, setData] = useState([]);
 
@@ -82,6 +79,7 @@ const ActivityLevelDistribution = () => {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+    // Colori per le sezioni del diagramma a torta
     const COLORS = ['darkBlue', 'darkRed', 'darkGreen', '#FF6384'];
 
     return (
@@ -101,13 +99,11 @@ const ActivityLevelDistribution = () => {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
-
                 <Tooltip />
             </PieChart>
         </ResponsiveContainer>
     );
 };
-
 
 const BMIStressCorrelation = () => {
     const [data, setData] = useState([]);
@@ -136,11 +132,17 @@ const BMIStressCorrelation = () => {
     );
 };
 
-
 const Metrics = () => {
-
   // Stato per tenere traccia della metrica selezionata dal menu a tendina
   const [selectedMetric, setSelectedMetric] = useState('');
+
+    // Mappa delle descrizioni per ogni metrica, questo oggetto associa ogni metrica a una descrizione specifica,
+    // che verrà visualizzata quando quella metrica è selezionata.
+  const metricDescriptions = {
+    "eta-qualitaSonno": "Benvenuto nella metrica Correlazione Qualità del Sonno - Età. Essa serve a mostrare come varia la qualità del sonno in base all'età delle persone.",
+    "livelliAttivitaFisica": "Benvenuto nella metrica Distribuzione Livelli Attività Fisica. Essa serve a darci un'idea generale del livello di allenamento delle persone, in quanto il livello di attività fisica sta ad indicare i minuti dedicati all'allenamento quotidiano.",
+    "bmi-stress": "Benvenuto nella metrica Correlazione Livello di Stress - BMI. Essa serve a mostrare come varia in media lo stress in base al suo indice di massa corporea (BMI). ",
+  };
 
   return (
     <MainLayout>
@@ -149,7 +151,8 @@ const Metrics = () => {
           <TextContainer>
             <Title>Metrics</Title>
             <BodyText>
-              Benvenuto nella pagina delle metriche. Seleziona una metrica dal menu a tendina per visualizzarla.
+              {selectedMetric ? metricDescriptions[selectedMetric] :
+              "Benvenuto nella pagina dedicata alle metriche. Utilizza il menu a tendina per selezionare e visualizzare le diverse metriche disponibili."}
             </BodyText>
           </TextContainer>
 
@@ -159,7 +162,6 @@ const Metrics = () => {
                 <option value="livelliAttivitaFisica">Distribuzione Livelli Attività Fisica</option>
                 <option value="bmi-stress">Correlazione Livello di Stress - BMI</option>
                 {/* Aggiungi altre metriche qui */}
-
             </Select>
 
             {selectedMetric === 'eta-qualitaSonno' && <ActivitySleepCorrelation/>}

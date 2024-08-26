@@ -27,7 +27,7 @@ const Image = styled.img`
 
 const LicenseText = styled.p`
   font-size: 16px;
-  color: #666;
+  color: #555;
   text-align: center;
   margin-bottom: 20px;
   font-style: italic;
@@ -44,12 +44,11 @@ const LicenseText = styled.p`
 
 const BodyText = styled.p`
   font-size: 20px;
-  color: #666;
+  color: #555;
   max-width: 600px;
   text-align: center;
   padding-bottom: 20px;
 `;
-
 
 export const MainContainer = styled.div`
   width: 100%;
@@ -66,7 +65,7 @@ const Info = () => {
     <MainLayout>
       <MainContainer>
         <div>
-          <Title>SafeSleep</Title>
+          <Title>safeSleep</Title>
           <Image src={image} alt="Descrizione dell'immagine" />
           <LicenseText>
             Progetto creato da <a href="https://github.com/Eljon99">Eljon Hida</a> e <a href="https://github.com/luicons01">Luigi Consiglio</a>.
@@ -76,14 +75,16 @@ const Info = () => {
           </LicenseText>
           <Subtitle>Informazioni</Subtitle>
           <BodyText>
-            L'obiettivo di <em>SafeSleep</em> è quello di registrare dati inerenti al sonno di persone e notare come fattori
+            L'obiettivo di <em>SafeSleep</em> è quello di registrare dati inerenti al sonno di persone e notare come
+            fattori
             quali:età, livello attività fisica, BMI ecc. influiscano sulla qualità del sonno e viceversa.
             <br/><br/>
-            Le tecnologie utilizzate per lo sviluppo di tale progetto sono:<br/>
+            Le tecnologie utilizzate per lo sviluppo di tale progetto sono:<br/> <br/>
             <strong style={{color: 'black', fontSize: '20px'}}>Python | React | MongoDB | Flask | PyCharm</strong>
             <br/><br/>
-            Il progetto è stato effettuato usando dati provenienti dal dataset di <a href={'https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset'}>Kaggle</a>
-             &nbsp;ed è situato nella seguente repository di <a href={'https://github.com/Eljon99/SafeSleep'}>GitHub</a>.
+            Il progetto è stato effettuato usando dati provenienti dal dataset di <a
+              href={'https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset'}>Kaggle</a>
+            &nbsp;ed è situato nella seguente repository di <a href={'https://github.com/Eljon99/SafeSleep'}>GitHub</a>.
           </BodyText>
         </div>
       </MainContainer>

@@ -13,7 +13,7 @@ const Title = styled.h1`
 
 const BodyText = styled.p`
   font-size: 20px;
-  color: #666;
+  color: #555;
   max-width: 600px;
 `;
 
@@ -42,15 +42,9 @@ const Home = () => {
                   <TextContainer>
                     <Title>safeSleep</Title>
                     <BodyText>
-                      Benvenuto su safeSleep! Il nostro sito è dedicato a fornirti le migliori informazioni
-                      e strumenti per migliorare la qualità del tuo sonno. Esplora le nostre funzionalità per
-                      saperne di più.Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                      Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
-                      parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-                      pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede
-                      usto, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-                      imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.
-                      Integer tincidunt. Cras dapibus.
+                        Benvenuto su <b>safeSleep</b>, scopri un'analisi completa dei dati sul sonno e le abitudini quotidiane, basata sul dataset "<b>Sleep Health and Lifestyle</b>".
+                        Esplora metriche chiave come la durata e la qualità del sonno, livelli di attività fisica, stress, salute cardiovascolare e la presenza di disturbi del sonno.
+                        Naviga tra le sezioni per comprendere come questi fattori influenzano il benessere generale.
                     </BodyText>
                   </TextContainer>
              </Container>

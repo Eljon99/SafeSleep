@@ -98,7 +98,7 @@ const CrudP = () => {
 
   const validatePhysicalActivityLevel = (pal) => {
     const parsedValue = parseInt(pal, 10);
-    const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 100;
+    const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 200;
     return isValid ? parsedValue : null;
   };
 
@@ -126,7 +126,7 @@ const CrudP = () => {
 
     const validPAL = validatePhysicalActivityLevel(activityLevel);
     if (validPAL === null) {
-      setErrorMessage('Il Livello di Attività Fisica deve essere un intero.');
+      setErrorMessage('Il Livello di Attività Fisica deve essere un intero minore o uguale a 200.');
       return;
     }
 
@@ -166,7 +166,8 @@ const CrudP = () => {
     <MainLayout>
       <MainContainer>
         <Title>Operazioni CRUD-Persona</Title>
-        <Description>In questa pagine è possibile visualizzare, eliminare e creare nuove informazioni riguardo tutti i dati delle persone del database.</Description>
+        <Description>In questa pagina, puoi gestire in modo completo le informazioni relative alle persone presenti nel database.
+          <br />Hai la possibilità di visualizzare, creare, ed eliminare i dati delle persone.</Description>
 
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Mostra l'errore se presente */}
 
