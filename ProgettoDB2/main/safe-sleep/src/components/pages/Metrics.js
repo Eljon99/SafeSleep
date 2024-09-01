@@ -46,7 +46,7 @@ const ActivitySleepCorrelation = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/api/activity-sleep-correlation')
+        fetch('http://127.0.0.1:5000/api/sleep-age-correlation')
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));
