@@ -42,11 +42,11 @@ const Select = styled.select`
   border: 1px solid #ccc;
 `;
 
-const ActivitySleepCorrelation = () => {
+const AgeSleepCorrelation = () => {
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:5000/api/sleep-age-correlation')
+    useEffect(() => { //  Si usa per eseguire codice che deve essere eseguito dopo il render del componente, come ad esempio il recupero di dati da un'API
+        fetch('http://127.0.0.1:5000/api/sleep-age-correlation') // Funzione di javascript che permette di effettuare chiamate e gestire risposte in modo asincrono
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));
@@ -164,7 +164,7 @@ const Metrics = () => {
                 {/* Aggiungi altre metriche qui */}
             </Select>
 
-            {selectedMetric === 'eta-qualitaSonno' && <ActivitySleepCorrelation/>}
+            {selectedMetric === 'eta-qualitaSonno' && <AgeSleepCorrelation/>}
             {selectedMetric === 'livelliAttivitaFisica' && <ActivityLevelDistribution />}
             {selectedMetric === 'bmi-stress' && <BMIStressCorrelation />}
           {/* Condiziona la visualizzazione di altre metriche qui */}
