@@ -68,9 +68,11 @@ const NavButton = styled.button`
 
 const Slider = () => {
   const images = [myImage1, myImage2, myImage3]; // Array di immagini
-  const [currentSlide, setCurrentSlide] = useState(0); // Stato per la slide corrente
+  const [currentSlide, setCurrentSlide] = useState(0); // Ogni volta che currentSlide cambia, il componente viene aggiornato per mostrare la nuova slide.
 
-  // Riferimento per l'intervallo automatico
+
+  // Usa useRef per creare un riferimento a un intervallo temporale senza causare un nuovo rendering del componente.
+  // Questo intervallo cambierà automaticamente la slide ogni 3 secondi.
   const slideInterval = useRef(null);
 
   // Funzione per passare alla slide successiva, memorizzata con useCallback
@@ -89,13 +91,13 @@ const Slider = () => {
   useEffect(() => {
     slideInterval.current = setInterval(nextSlide, 3000); // Cambia immagine ogni 3 secondi
 
-    // Pulizia dell'intervallo quando il componente viene smontato
+    // Pulizia dell'intervallo quando il componente viene smontato per evitare problemi di prestazioni.
     return () => {
       clearInterval(slideInterval.current);
     };
   }, [nextSlide]);
 
-  // Funzione per resettare l'intervallo quando si naviga manualmente
+  //Quando l'utente clicca sui bottoni di navigazione, questa funzione ferma l'autoplay, esegue la navigazione manuale, e poi riavvia l'autoplay.
   const handleNavClick = (navFunction) => {
     clearInterval(slideInterval.current);
     navFunction();
@@ -107,6 +109,7 @@ const Slider = () => {
     <SliderContainer>
       <NavButton direction="prev" onClick={() => handleNavClick(prevSlide)}>{'<'}</NavButton>
       <SlideWrapper currentSlide={currentSlide}>
+        {/*  Per ogni immagine nell'array `images` crea un componente `Slide` Usa l'indice dell'immagine come chiave unica per ogni `Slide` */}
         {images.map((image, index) => (
           <Slide
             key={index}

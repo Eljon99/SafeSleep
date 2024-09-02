@@ -40,10 +40,15 @@ const ErrorMessage = styled.div`
 `;
 
 const CrudP = () => {
+  // Stato per memorizzare i dati del sonno
   const [sleepData, setSleepData] = useState([]);
+  // Stato per gestire la pagina corrente nella paginazione
   const [currentPage, setCurrentPage] = useState(1);
-  const [errorMessage, setErrorMessage] = useState(''); // Stato per gestire il messaggio di errore
+  // Stato per gestire il messaggio di errore
+  const [errorMessage, setErrorMessage] = useState('');
+  // Numero di elementi per pagina
   const itemsPerPage = 8;
+
 
   const [formData, setFormData] = useState({
     Gender: '',
@@ -53,10 +58,13 @@ const CrudP = () => {
     'BMI Category': '',
   });
 
+  //Quando il componente viene montato, fetchSleepData viene chiamata per recuperare i dati dal server e memorizzarli nello stato sleepData.
   useEffect(() => {
     fetchSleepData();
   }, []);
 
+
+  //Effettua una richiesta GET al server per ottenere i dati del sonno e aggiorna lo stato sleepData con questi dati.
   const fetchSleepData = async () => {
     try {
       const response = await Axios.get('http://127.0.0.1:5000/api/persona');
@@ -66,6 +74,7 @@ const CrudP = () => {
     }
   };
 
+  //Aggiorna lo stato formData quando l'utente modifica i valori nei campi del modulo.
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -95,13 +104,14 @@ const CrudP = () => {
   return occupation;
 };
 
-
   const validatePhysicalActivityLevel = (pal) => {
     const parsedValue = parseInt(pal, 10);
     const isValid = Number.isInteger(parsedValue) && parsedValue >= 1 && parsedValue <= 200;
     return isValid ? parsedValue : null;
   };
 
+  //Quando l'utente invia il modulo, questa funzione invia una richiesta POST al server per aggiungere i dati del modulo.
+  // Se ha successo, aggiorna lo stato sleepData e resetta il modulo.
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -149,6 +159,7 @@ const CrudP = () => {
     }
   };
 
+  //Permette di eliminare un dato specifico  e aggiorna lo stato sleepData per rimuovere l'elemento eliminato.
   const handleDelete = async (person_id) => {
     try {
       await Axios.delete(`http://127.0.0.1:5000/api/persona/${person_id}`);
@@ -158,6 +169,7 @@ const CrudP = () => {
     }
   };
 
+  //Calcola il numero totale di pagine e i dati da visualizzare per la pagina corrente, gestendo la visualizzazione dei dati in pagine.
   const totalPages = Math.ceil(sleepData.length / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
   const currentItems = sleepData.slice(startIdx, startIdx + itemsPerPage);

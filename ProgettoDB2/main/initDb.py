@@ -2,6 +2,7 @@ import pymongo
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
+# __name__ è passato come argomento per dire a Flask dove trovare le risorse dell'applicazione (come i template e i file statici).
 app = Flask(__name__)
 
 # Configura MongoDB
@@ -67,6 +68,3 @@ else:
         diary_collection.insert_one(diary_document)
 
     print("Divisione della collezione completata con successo.")
-
-# Chiudere la connessione
-# client.close()
